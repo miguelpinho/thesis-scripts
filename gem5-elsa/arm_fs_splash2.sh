@@ -6,10 +6,11 @@ GEM5_PATH=/homelocal/mpinho-local/gem5-thesis
 DATE=3-april-2019
 
 OUT_DIR=/homelocal/mpinho-local/output/$DATE/splash2
-SCRIPT_LIST=(radix fft)
-# SCRIPT_LIST=(radix barnes fft fmm)
+SCRIPT_LIST=(radix barnes fft fmm)
+# SCRIPT_LIST=(lu raytrace cholesky ocean)
+# SCRIPT_LIST=(water-nsquared radiosity)
 
-for script in $SCRIPT_LIST; do {
+for script in ${SCRIPT_LIST[@]}; do {
     $GEM5_PATH/build/ARM/gem5.opt \
         -d "$OUT_DIR-$script" -re \
         $GEM5_PATH/configs/example/fs.py \
@@ -27,9 +28,9 @@ for script in $SCRIPT_LIST; do {
 
 trap "kill $PID_LIST" SIGINT
 
-echo "SPLASH-2 benchmarks have started";
+echo "SPLASH-2 benchmarks have started.";
 
 wait $PID_LIST
 
 echo
-echo "All benchmarks have completed";
+echo "All benchmarks have ended.";
