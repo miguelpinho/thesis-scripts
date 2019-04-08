@@ -12,4 +12,4 @@ $GEM5_PATH/build/ARM/gem5.opt \
     --checkpoint-dir=./checkpoints \
     --checkpoint-restore 1 \
     --restore-with-cpu=O3_ARM_v7a_3 \
-    --script=./sim-scripts/splash2/fft.sh
+    --script=./sim-scripts/ComputeLibrary/neon_sgemm.sh
