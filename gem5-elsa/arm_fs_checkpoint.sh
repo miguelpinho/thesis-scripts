@@ -1,6 +1,11 @@
+#!/bin/bash
+
 export M5_PATH=/homelocal/mpinho-local/fs-files
 GEM5_PATH=/homelocal/mpinho-local/gem5-thesis
-OUT_DIR=/homelocal/mpinho-local/output/1-april-2019/fs-check
+
+DATE=9-april-2019
+
+OUT_DIR=/homelocal/mpinho-local/output/$DATE/fs-check
 
 $GEM5_PATH/build/ARM/gem5.opt \
     -d $OUT_DIR -re \
