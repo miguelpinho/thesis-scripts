@@ -3,7 +3,7 @@
 export M5_PATH=/homelocal/mpinho-local/fs-files
 GEM5_PATH=/homelocal/mpinho-local/gem5-thesis
 
-DATE=9-april-2019
+DATE=19-april-2019
 
 OUT_DIR=/homelocal/mpinho-local/output/$DATE/fs-4cpus
 CHECKPOINT_DIR=/homelocal/mpinho-local/checkpoints/fs-4cpus

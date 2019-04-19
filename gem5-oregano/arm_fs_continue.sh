@@ -9,6 +9,6 @@ $GEM5_PATH/build/ARM/gem5.opt \
     --disk-image=$M5_PATH/disks/benchmarks.img \
     --dtb-filename=$M5_PATH/binaries/armv8_gem5_v1_1cpu.dtb \
     --caches --l2cache \
-    --checkpoint-dir=./checkpoints \
+    --checkpoint-dir=../checkpoints \
     --checkpoint-restore 1 \
     --restore-with-cpu=O3_ARM_v7a_3

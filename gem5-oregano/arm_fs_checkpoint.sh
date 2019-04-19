@@ -9,4 +9,4 @@ $GEM5_PATH/build/ARM/gem5.opt \
     --disk-image=$M5_PATH/disks/parsec3.img \
     --dtb-filename=$M5_PATH/binaries/armv8_gem5_v1_1cpu.dtb \
     --caches --l2cache \
-    --script ./sim-scripts/checkpoint.sh
+    --script ../sim-scripts/checkpoint.sh
