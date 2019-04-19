@@ -10,3 +10,4 @@ Todo:
 - improve README
 - refactor script set (so much redundant code for now...)
 - automatically fetch date
+- find a cleaner way to get all script names
