@@ -1,5 +1,5 @@
 export M5_PATH=/home/miguelp/gem5-full-system/aarch-system-20180409
-GEM5_PATH=/home/miguelp/gem5
+GEM5_PATH=/home/miguelp/gem5-test
 
 $GEM5_PATH/build/ARM/gem5.opt \
     -d /home/miguelp/Documents/Blue/prototype/fs-logs/trusty-O3CPU \
