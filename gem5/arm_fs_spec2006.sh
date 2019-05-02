@@ -1,7 +1,7 @@
 #!/bin/bash
 
-DATE=$(LANG=en_us_88591; date "+%d-%b-%Y")
+SCRIPT_PATH=../sim-scripts/spec2006
 
-OUT_DIR=$M5OUT_PATH/${DATE,,}/fs-spec2006
-
-parallel ../util/run_fs_1cpu.sh ::: ../spec2006/libquantum.sh ../spec2006/hmmer.sh ::: libquantum hmmer
+parallel ../util/run_fs_1cpu.sh \
+    ::: $SCRIPT_PATH/libquantum-small.sh $SCRIPT_PATH/hmmer-small.sh \
+    :::+ libquantum hmmer

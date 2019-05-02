@@ -1,6 +1,8 @@
 #!/bin/bash
 
-OUT_DIR=/homelocal/mpinho-local/output/$DATE/$2
+DATE=$(LANG=en_us_88591; date "+%d-%b-%Y")
+
+OUT_DIR=$M5OUT_PATH/${DATE,,}/fs-spec2006/$2
 
 $GEM5_PATH/build/ARM/gem5.opt \
     -d $OUT_DIR -re \
