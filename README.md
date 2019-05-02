@@ -3,11 +3,13 @@
 Set of scripts to automate running simulations on gem5.
 
 Currently functional:
+
 - Splash-2 benchmarks (most of them)
 - some PARSEC-3.0 benchmarks
 - at least two SPEC2006 (probably several more)
 
 Todo:
+
 [ ] improve README
 [ ] refactor script set (so much redundant code for now...)
 [x] automatically fetch date
