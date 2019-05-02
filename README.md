@@ -10,8 +10,7 @@ Currently functional:
 
 Todo:
 
-[ ] improve README
-[ ] refactor script set (so much redundant code for now...)
-[x] automatically fetch date
-[ ] find a cleaner way to get all script names (argfile? ``parallel`` is very
-useful for [this](https://www.gnu.org/software/parallel/parallel_tutorial.html#Linking-arguments-from-input-sources)
+- improve README
+- refactor script set (so much redundant code for now...)
+- find a cleaner way to get all script names (argfile? ``parallel`` is very
+useful for [this](https://www.gnu.org/software/parallel/parallel_tutorial.html#Linking-arguments-from-input-sources))
