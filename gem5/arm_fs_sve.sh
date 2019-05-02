@@ -1,15 +1,12 @@
 #!/bin/bash
 
-export M5_PATH=/homelocal/mpinho-local/fs-files
-GEM5_PATH=/homelocal/mpinho-local/gem5-sve
+DATE=$(LANG=en_us_88591; date "+%d-%b-%Y")
 
-DATE=27-april-2019
-
-OUT_DIR=/homelocal/mpinho-local/output/$DATE/fs-sve
+OUT_DIR=$M5OUT_PATH/${DATE,,}/fs-sve
 
 $GEM5_PATH/build/ARM/gem5.opt \
     -d $OUT_DIR -re \
-    $GEM5_PATH/configs/example/fs.py \
+    $GEM5_SVE_PATH/configs/example/fs.py \
     --arm-sve-vl=4 \
     --machine-type=VExpress_GEM5_V1 \
     --kernel=$M5_PATH/binaries/vmlinux.vexpress_gem5_v1_64 \

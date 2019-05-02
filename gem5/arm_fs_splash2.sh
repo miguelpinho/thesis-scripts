@@ -1,11 +1,8 @@
 #!/bin/bash
 
-export M5_PATH=/homelocal/mpinho-local/fs-files
-GEM5_PATH=/homelocal/mpinho-local/gem5-thesis
+DATE=$(LANG=en_us_88591; date "+%d-%b-%Y")
 
-DATE=19-april-2019
-
-OUT_DIR=/homelocal/mpinho-local/output/$DATE/splash2
+OUT_DIR=$M5OUT_PATH/${DATE,,}/fs-splash2
 SCRIPT_LIST=(radix barnes fft fmm lu raytrace ocean water-nsquared radiosity)
 
 for script in ${SCRIPT_LIST[@]}; do {

@@ -1,11 +1,8 @@
 #!/bin/bash
 
-BENCHMARKS_PATH=/homelocal/mpinho-local/benchmarks
-GEM5_PATH=/homelocal/mpinho-local/gem5-thesis
+DATE=$(LANG=en_us_88591; date "+%d-%b-%Y")
 
-DATE=19-april-2019
-
-OUT_DIR=/homelocal/mpinho-local/output/$DATE/se
+OUT_DIR=$M5OUT_PATH/${DATE,,}/se
 
 $GEM5_PATH/build/ARM/gem5.opt \
     -d $OUT_DIR -re \
