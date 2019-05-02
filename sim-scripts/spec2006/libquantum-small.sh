@@ -6,6 +6,7 @@ pwd
 ls
 
 m5 dumpresetstats
-./benchspec/CPU2006/462.libquantum/exe/libquantum_base.arm-64bit 33 5
+./benchspec/CPU2006/462.libquantum/exe/libquantum_base.gcc83-aarch64 \
+    33 5
 m5 dumpresetstats
 m5 exit
