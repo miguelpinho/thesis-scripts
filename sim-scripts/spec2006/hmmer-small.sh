@@ -8,5 +8,5 @@ ls
 m5 resetstats
 ./benchspec/CPU2006/456.hmmer/exe/hmmer_base.gcc83-aarch64 \
     ./benchspec/CPU2006/456.hmmer/data/test/input/bombesin.hmm
-m5 dumpstats
+m5 dumpresetstats
 m5 exit

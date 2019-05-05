@@ -1,0 +1,8 @@
+blackscholes_simsmall_1.sh
+canneal_simsmall_1.sh
+fluidanimate_simsmall_1.sh
+freqmine_simsmall_1.sh
+gsl_simsmall_1.sh
+libxml2_simsmall_1.sh
+streamcluster_simsmall_1.sh
+swaptions_simsmall_1.sh

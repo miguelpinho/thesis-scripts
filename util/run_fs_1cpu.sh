@@ -2,7 +2,7 @@
 
 DATE=$(LANG=en_us_88591; date "+%d-%b-%Y")
 
-OUT_DIR=$M5OUT_PATH/${DATE,,}/fs-spec2006/$2
+OUT_DIR=$M5OUT_PATH/${DATE,,}/$2
 
 $GEM5_PATH/build/ARM/gem5.opt \
     -d $OUT_DIR -re \
