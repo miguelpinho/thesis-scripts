@@ -1,4 +1,4 @@
-#!/bin/bash
+#/bin/bash
 
 DATE=$(LANG=en_us_88591; date "+%d-%b-%Y")
 
