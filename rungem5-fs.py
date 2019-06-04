@@ -1,19 +1,53 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+Util and module for running gem5 full-system simulations.
+"""
 
 import argparse
 import datetime
 import subprocess
 import os
 
-def get_arguments:
+def get_arguments():
     """Parse rungem5 arguments."""
     parser = argparse.ArgumentParser(description='Run gem5 full-system.')
     subparsers = parser.add_subparsers(title='action', help='action to perform')
 
     # generic options
-    parser.add_argument('env_file', help="")
-    parser.add_argument('gem5_path')
-    parser.add_argument('m5out_path')
+    # env
+    parser.add_argument(
+        '--env-file',
+        help='''Script file frow where to load environment variables.'''
+    )
+    parser.add_argument(
+        '--gem5-path',
+        help='''Path to the gem5 main directory. Overrides environment
+        variable.'''
+    )
+    parser.add_argument(
+        '--gem5-ckpoint-path',
+        help='''Root directory for execution checkpoints. Overrides
+        environment variable.'''
+    )
+    parser.add_argument(
+        '--m5out-path',
+        help='''Root directory for the generated output. Overrides
+        environment variable.'''
+    )
+    parser.add_argument(
+        '-N',
+        '--num-jobs',
+        default=4,
+        help='''Max number of simulation jobs allowed to be running in
+        parallel. Overrides environment variable.'''
+    )
+    parser.add_argument(
+        '--benchmarks-path',
+        help='''Root directory for the benchmarks. Overrides environment
+        variable.'''
+    )
 
     # "boot" action
     parser_boot = subparsers.add_parser('boot', help='boot full-system')
@@ -33,15 +67,20 @@ def get_arguments:
     return parser.parse_args()
 
 
-def get_paths():
+def get_paths(args):
     """Get gem5 paths, from environment or cli arguments."""
+    paths = {}
 
-def run_fs():
+    if 
+    elif 'M5_PATH' in os.environ:
+        paths['M5_PATH'] = 'M5_PATH'
+
+    return paths
+
+
+def run_fs(paths, args_gem5, args_config):
     """Run gem5 with the given arguments."""
-    args_gem5 = []
-    args_config = []
-    
-    args = [gem5_path] + args_gem5 + [config_path] + args_config
+    args = [paths['gem5_path']] + args_gem5 + [paths['config']] + args_config
     subprocess.run()
 
 
