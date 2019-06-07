@@ -9,6 +9,8 @@ import argparse
 import datetime
 import subprocess
 import os
+from pathlib import Path
+from dotenv import load_dotenv
 
 
 def get_arguments():
@@ -83,6 +85,20 @@ def get_arguments():
     return parser.parse_args()
 
 
+def load_env(args):
+    """Loads the .env file, if any was passed."""
+    if "env_file" in args:
+        env_path = Path(args.env_file)
+
+        if env_path.exists():
+            try:
+                load_dotenv(dotenv_path=env_path, override=True)
+            except IOError:
+                print("Could not open .env file. Ignoring.")
+        else:
+            print("Invalid .env file path. Ignoring.")
+
+
 def get_paths(args):
     """Get gem5 paths, from environment or cli arguments."""
     paths = {}
@@ -104,8 +120,8 @@ def get_paths(args):
         elif p[2] in os.environ:
             paths[p[3]] = os.environ[p[2]]
         else:
-            print("No path for '{}' was provided. Use option or env"
-                  "variable {}.".format(p[0], p[2]))
+            print("No path for '{}' was provided. Use option or env "
+                  "variable '{}'.".format(p[0], p[2]))
             pass
 
     return paths
@@ -114,11 +130,16 @@ def get_paths(args):
 def run_fs(paths, args_gem5, args_config):
     """Run gem5 with the given arguments."""
     args = [paths['gem5_path']] + args_gem5 + [paths['config']] + args_config
-    subprocess.run()
+
+    print('Running command: {}'.format(' '.join(args)))
+
+    # subprocess.run()
 
 
 def main():
     args = get_arguments()
+
+    load_env(args)
     paths = get_paths(args)
 
     print(paths)
