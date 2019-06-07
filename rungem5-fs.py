@@ -86,21 +86,35 @@ def get_arguments():
 
 
 def load_env(args):
-    """Loads the .env file, if any was passed."""
+    """Loads the .env file, if any was passed or .env is detected."""
+    # Passed env_file is priority. Overrides environment vars.
     if "env_file" in args:
         env_path = Path(args.env_file)
-
         if env_path.exists():
             try:
                 load_dotenv(dotenv_path=env_path, override=True)
             except IOError:
-                print("Could not open .env file. Ignoring.")
+                print("Could not open env_file file. Ignoring.")
+            else:
+                return
         else:
-            print("Invalid .env file path. Ignoring.")
+            print("Invalid env_file path. Ignoring.")
+
+    # Next, tries the default .env file. This one does not override.
+    env_path = Path('.') / '.env'
+    if env_path.exists():
+        try:
+            load_dotenv(dotenv_path=env_path)
+        except:
+            pass
 
 
 def get_paths(args):
-    """Get gem5 paths, from environment or cli arguments."""
+    """
+    Get gem5 paths, from environment or cli arguments.
+
+    Priorities: cli args > .env arg > environment > default .env
+    """
     paths = {}
 
     # description | arg | env | path
@@ -129,7 +143,8 @@ def get_paths(args):
 
 def run_fs(paths, args_gem5, args_config):
     """Run gem5 with the given arguments."""
-    args = [paths['gem5_path']] + args_gem5 + [paths['config']] + args_config
+    args = [paths['GEM5']] + args_gem5 + \
+        [paths['GEM5'] + '/config/fs.py'] + args_config
 
     print('Running command: {}'.format(' '.join(args)))
 
@@ -144,7 +159,10 @@ def main():
 
     print(paths)
 
-    print("Done!")
+    args_gem5 = []
+    args_config = []
+
+    run_fs(paths, args_gem5, args_config)
 
 
 if __name__ == "__main__":
