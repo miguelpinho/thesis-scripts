@@ -8,7 +8,7 @@
 !.vscode/extensions.json
 
 # vim
-# swap
+## swap
 [._]*.s[a-v][a-z]
 [._]*.sw[a-p]
 [._]s[a-rt-v][a-z]

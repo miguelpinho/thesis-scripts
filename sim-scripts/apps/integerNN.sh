@@ -1,7 +1,7 @@
 #!/bin/bash
 
-SPEC_DIR="/home/integerNeuralNetwork"
-cd $SPEC_DIR
+APP_DIR="/home/apps/integerNeuralNetwork"
+cd $APP_DIR
 pwd
 ls
 
