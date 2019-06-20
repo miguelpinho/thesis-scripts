@@ -1,6 +1,7 @@
 #!/bin/bash
 
-APP_DIR="/home/apps/integerNeuralNetwork"
+BENCH_DIR="/root/benchmarks"
+APP_DIR="$BENCH_DIR/thesis-apps/integerNeuralNetwork"
 cd $APP_DIR
 pwd
 ls

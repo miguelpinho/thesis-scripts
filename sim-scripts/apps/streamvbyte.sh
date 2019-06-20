@@ -1,6 +1,7 @@
 #!/bin/bash
 
-APP_DIR="/home/apps/streamvbyte"
+BENCH_DIR="/root/benchmarks"
+APP_DIR="$BENCH_DIR/thesis-apps/streamvbyte"
 cd $APP_DIR
 pwd
 ls
