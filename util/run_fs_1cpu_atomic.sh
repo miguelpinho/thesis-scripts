@@ -15,8 +15,5 @@ $GEM5_PATH/build/ARM/gem5.opt \
     --cpu-type=AtomicSimpleCPU \
     --caches --l2cache \
     --checkpoint-dir=$GEM5_CKPOINT_PATH/fs \
-    --checkpoint-restore 1 \
-    --take-checkpoints=1500000000000,10000000000 \
-    --restore-with-cpu=AtomicSimpleCPU \
     --script=$1
 
