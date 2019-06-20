@@ -106,6 +106,12 @@ def get_arguments():
         default=False,
         help='''use AtomicSimpleCPU as the main cpu-type'''
     )
+    parser.add_argument(
+        '--disk-image-file',
+        default='ubuntu-14.04.img',
+        help='''disk image for the simulation. Should be located in
+        $M5_PATH/disks/'''
+    )
 
     # "info" action
     parser_info = subparsers.add_parser(
@@ -188,6 +194,7 @@ def get_paths(args):
     """
     paths = {}
 
+    # Environment paths
     # (description, arg, env, path)
     req_paths = [
         ("gem5 root dir", 'gem5_path', 'GEM5_PATH', 'GEM5'),
@@ -198,22 +205,27 @@ def get_paths(args):
     ]
 
     dic_args = vars(args)
-
     for p in req_paths:
         if p[1] in args:
             path = Path(dic_args[p[1]])
         elif p[2] in os.environ:
             path = Path(os.environ[p[2]])
         else:
-            # TODO: add option name
             print("No path for '{}' was provided. Use option '--{}' or env "
                   "variable '{}'.".format(p[0], p[1], p[2]))
             sys.exit()
 
-        if not path.exists() or not path.is_dir():
+        if not path.is_dir():
             print("Invalid path for '{}': '{}'.".format(p[0], path))
             sys.exit()
         paths[p[3]] = path
+
+    # File paths
+    disk_path = paths['M5'] / "disks" / args.disk_image_file
+    if not disk_path.is_file():
+        print("Invalid path disk image path: {}.".format(disk_path))
+        sys.exit()
+    paths['DISK'] = disk_path
 
     return paths
 
@@ -289,7 +301,7 @@ def get_config_args(args, paths):
     if arch == 'ARM':
         # architecure specific files
         args_config.append(
-            '--disk-image={}/disks/benchmarks.img'.format(paths['M5']))
+            '--disk-image={}'.format(paths['DISK']))
 
         args_config.append('--machine-type=VExpress_GEM5_V1')
         args_config.append(
