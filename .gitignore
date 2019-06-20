@@ -1,14 +1,21 @@
-/* vscode */
+.env
+
+# vscode
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
 
-/* vim */
-# Swap
+# vim
+## swap
 [._]*.s[a-v][a-z]
 [._]*.sw[a-p]
 [._]s[a-rt-v][a-z]
 [._]ss[a-gi-z]
 [._]sw[a-p]
+
+# python
+__pycache__/
+*.py[cod]
+*$py.class

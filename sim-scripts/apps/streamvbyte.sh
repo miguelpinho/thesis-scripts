@@ -1,10 +1,10 @@
 #!/bin/bash
 
 BENCH_DIR="/root/benchmarks"
-APP_DIR="$BENCH_DIR/thesis-apps/integerNeuralNetwork"
+APP_DIR="$BENCH_DIR/thesis-apps/streamvbyte"
 cd $APP_DIR
 pwd
 ls
 
-./intNN
+./example
 m5 exit

@@ -1,6 +1,7 @@
 #!/bin/bash
 
-PARSEC_DIR="/home/parsec-3.0"
+BENCH_DIR="/root/benchmarks"
+PARSEC_DIR="$BENCH_DIR/parsec-3.0"
 cd $PARSEC_DIR
 pwd
 

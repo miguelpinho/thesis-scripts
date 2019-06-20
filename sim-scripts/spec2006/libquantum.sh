@@ -1,6 +1,7 @@
 #!/bin/bash
 
-SPEC_DIR="/home/spec_cpu2006-1.2"
+BENCH_DIR="/root/benchmarks"
+SPEC_DIR="$BENCH_DIR/spec_cpu2006-1.2"
 cd $SPEC_DIR
 pwd
 ls
