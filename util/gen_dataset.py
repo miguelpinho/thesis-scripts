@@ -20,6 +20,15 @@ def gen_normal_data(mu, sigma, size, seed=None):
     return data
 
 
+def gen_lognormal_data(mu, sigma, size, seed=None):
+    np.random.seed(seed)
+
+    data = np.random.lognormal(mean=mu, sigma=sigma, size=size)
+    data = np.rint(data)
+
+    return data
+
+
 def save_data(data, file=None, gzip=False):
     if gzip == True:
         file = file + ".gz"
@@ -28,13 +37,13 @@ def save_data(data, file=None, gzip=False):
 
 
 def get_args():
-    """Parse gen_dataset arguments."""
+    """Parse gen_dataset util arguments."""
     parser = argparse.ArgumentParser(description='''Generate integer dataset
     following a given distribution''')
 
     parser.add_argument(
         '--dist',
-        choices=('normal'),
+        choices=('normal', 'lognormal'),
         default='normal',
         help='''distribution type'''
     )
@@ -82,20 +91,26 @@ def get_args():
 def main():
     args = get_args()
 
-    (mu, sigma, size) = (args.mu, args.sigma, args.size)
+    (mu, sigma, size, dist) = (args.mu, args.sigma, args.size, args.dist)
     if args.seed is None:
         seed = random.randint(0, 1000000)
     else:
         seed = args.seed
 
-    data = gen_normal_data(mu, sigma, size, seed=seed)
+    if dist == 'normal':
+        data = gen_normal_data(mu, sigma, size, seed=seed)
+    elif dist == 'lognormal':
+        data = gen_lognormal_data(mu, sigma, size, seed=seed)
+    else:
+        print("Unsupported distribution: {}.".format(args.dist))
+        sys.exit()
 
     path = Path(args.outdir)
     if not path.is_dir():
         print("Invalid out-dir path: {}".format(path))
         sys.exit()
 
-    file_tag = "normal_mu{}_s{}_n{}_seed{}.out".format(mu, sigma, size, seed)
+    file_tag = "{}_mu{}_s{}_n{}_seed{}.out".format(dist, mu, sigma, size, seed)
     path = path / file_tag
 
     save_data(data, file=str(path), gzip=args.gzip)
