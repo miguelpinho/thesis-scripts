@@ -3,7 +3,6 @@
 import sys
 import argparse
 import numpy as np
-import random
 from pathlib import Path
 
 """
@@ -93,7 +92,7 @@ def main():
 
     (mu, sigma, size, dist) = (args.mu, args.sigma, args.size, args.dist)
     if args.seed is None:
-        seed = random.randint(0, 1000000)
+        seed = np.random.randint(0, 1000000)
     else:
         seed = args.seed
 
