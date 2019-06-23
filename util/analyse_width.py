@@ -14,9 +14,9 @@ def get_signed_width(val):
     """Return the signed bit-width of an integer value."""
     val = int(val)
     if val < 0:
-        return val.bit_length()
-    else:
-        return val.bit_length() + 1
+        val = -val - 1
+
+    return val.bit_length() + 1
 
 
 def get_unsigned_width(val):
