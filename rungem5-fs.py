@@ -322,6 +322,11 @@ def get_config_args(args, paths):
     if args.no_caches == False:
         args_config.extend(['--caches', '--l2cache'])
 
+    # action specific
+    if args.action == "checkpoint":
+        script = Path.cwd() / "sim-scripts" / "checkpoint.sh"
+        args_config.append("--script={}".format(script))
+
     return args_config
 
 
