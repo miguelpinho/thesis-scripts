@@ -11,6 +11,7 @@ Util and module for generating reproducible integer data sets.
 
 
 def gen_normal_data(mu, sigma, size, seed=None):
+    """Returns a random integer array, following a normal distribution."""
     np.random.seed(seed)
 
     data = np.random.normal(loc=mu, scale=sigma, size=size)
@@ -20,6 +21,7 @@ def gen_normal_data(mu, sigma, size, seed=None):
 
 
 def gen_lognormal_data(mu, sigma, size, seed=None):
+    """Returns a random integer array, following a lognormal distribution."""
     np.random.seed(seed)
 
     data = np.random.lognormal(mean=mu, sigma=sigma, size=size)
@@ -29,6 +31,7 @@ def gen_lognormal_data(mu, sigma, size, seed=None):
 
 
 def save_data(data, file=None, gzip=False):
+    """Saves an integer array as a .csv formatted file."""
     if gzip == True:
         file = file + ".gz"
 
@@ -37,8 +40,8 @@ def save_data(data, file=None, gzip=False):
 
 def get_args():
     """Parse gen_dataset util arguments."""
-    parser = argparse.ArgumentParser(description='''Generate integer dataset
-    following a given distribution''')
+    parser = argparse.ArgumentParser(description='''Generate an integer
+    dataset following a given random distribution''')
 
     parser.add_argument(
         '--dist',
