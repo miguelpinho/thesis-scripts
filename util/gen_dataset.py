@@ -32,7 +32,7 @@ def save_data(data, file=None, gzip=False):
     if gzip == True:
         file = file + ".gz"
 
-    np.savetxt(file, data[None, :], fmt="%d", delimiter=',\n')
+    np.savetxt(file, data[None, :], fmt="%d", delimiter='\n')
 
 
 def get_args():
@@ -109,7 +109,7 @@ def main():
         print("Invalid out-dir path: {}".format(path))
         sys.exit()
 
-    file_tag = "{}_mu{}_s{}_n{}_seed{}.out".format(dist, mu, sigma, size, seed)
+    file_tag = "{}_mu{}_s{}_n{}_seed{}.csv".format(dist, mu, sigma, size, seed)
     path = path / file_tag
 
     save_data(data, file=str(path), gzip=args.gzip)
