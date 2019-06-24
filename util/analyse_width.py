@@ -5,7 +5,7 @@ import argparse
 import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
-from gen_dataset import save_data
+from gen_data import save_data
 
 """
 Util and module for analysing the width distribution of a data set.
