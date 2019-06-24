@@ -40,9 +40,12 @@ def get_data_width(data, width_def='signed'):
     return np.array(list(map(width_func, data)))
 
 
-def read_data(file):
+def read_data(in_file=None):
     """Return data read from a .csv formatted file."""
-    return np.genfromtxt(file, dtype=int)
+    if in_file is None:
+        return np.loadtxt(sys.stdin, dtype=int)
+
+    return np.loadtxt(in_file, dtype=int)
 
 
 def save_width_hist(data, file, bits=64, title=None):
@@ -67,6 +70,8 @@ def get_args():
 
     parser.add_argument(
         'in_file',
+        nargs='?',
+        default=None,
         help='''csv file with integer data set'''
     )
     parser.add_argument(
@@ -89,12 +94,14 @@ def get_args():
     parser.add_argument(
         '--csv',
         action='store_true',
-        default=False
+        default=False,
+        help='''output data width as .csv file'''
     )
     parser.add_argument(
         '--hist',
         action='store_true',
-        default=False
+        default=False,
+        help='''output width histogram as .pdf figure file'''
     )
 
     return parser.parse_args()
@@ -103,10 +110,16 @@ def get_args():
 def main():
     args = get_args()
 
-    in_path = Path(args.in_file)
-    if not in_path.is_file():
-        print('Invalid file path: {}'.format(args.in_file))
-        sys.exit()
+    if args.in_file is None:
+        in_stem = 'pipe'
+        in_file = None
+    else:
+        in_path = Path(args.in_file)
+        if not in_path.is_file():
+            print('Invalid file path: {}'.format(args.in_file))
+            sys.exit()
+        in_stem = in_path.stem
+        in_file = str(in_path)
 
     if args.outdir is None:
         out_folder = Path.cwd()
@@ -116,17 +129,17 @@ def main():
             print('Invalid outdir specified: {}'.format(args.outdir))
             sys.exit()
 
-    data = read_data(str(in_path))
+    data = read_data(in_file=in_file)
     width = get_data_width(data, width_def=args.width_def)
 
     tag = "_{}_width".format(args.width_def)
 
     if args.csv == True:
-        csv_path = Path(out_folder, in_path.stem + tag).with_suffix('.csv')
-        save_data(width, file=str(csv_path))
+        csv_path = Path(out_folder, in_stem + tag).with_suffix('.csv')
+        save_data(width, out_file=str(csv_path))
 
     if args.hist == True:
-        hist_path = Path(out_folder, in_path.stem + tag).with_suffix('.pdf')
+        hist_path = Path(out_folder, in_stem + tag).with_suffix('.pdf')
         save_width_hist(width, hist_path, bits=args.bits)
 
 

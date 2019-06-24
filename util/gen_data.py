@@ -30,12 +30,15 @@ def gen_lognormal_data(mu, sigma, size, seed=None):
     return data
 
 
-def save_data(data, file=None, gzip=False):
+def save_data(data, out_file=None, gzip=False):
     """Saves an integer array as a .csv formatted file."""
-    if gzip == True:
-        file = file + ".gz"
+    if out_file is None:
+        np.savetxt(sys.stdout.buffer, data[None, :], fmt="%d", delimiter='\n')
+    else:
+        if gzip == True:
+            out_file = out_file + ".gz"
 
-    np.savetxt(file, data[None, :], fmt="%d", delimiter='\n')
+        np.savetxt(out_file, data[None, :], fmt="%d", delimiter='\n')
 
 
 def get_args():
@@ -76,15 +79,21 @@ def get_args():
         help='''standard deviation of the distribution'''
     )
     parser.add_argument(
-        '-Z',
         '--gzip',
         action="store_true",
         default=False,
         help='''generate the output file as gzip (.gz)'''
     )
     parser.add_argument(
-        'outdir',
+        '--outdir',
+        default=None,
         help='''directory where output file is stored'''
+    )
+    parser.add_argument(
+        '--pipe',
+        action='store_true',
+        default=False,
+        help='''pipe output to stdout'''
     )
 
     return parser.parse_args()
@@ -107,17 +116,24 @@ def main():
         print("Unsupported distribution: {}.".format(args.dist))
         sys.exit()
 
-    path = Path(args.outdir)
-    if not path.is_dir():
-        print("Invalid out-dir path: {}".format(path))
-        sys.exit()
+    if args.pipe:
+        out_file = None
+    else:
+        if args.outdir is None:
+            path = Path.cwd()
+        else:
+            path = Path(args.outdir)
+            if not path.is_dir():
+                print("Invalid out-dir path: {}".format(path))
+                sys.exit()
 
-    file_tag = "{}_mu{}_s{}_n{}_seed{}".format(dist, mu, sigma, size, seed)
-    file_tag = file_tag.replace('.', "_")
-    path = Path(path, file_tag).with_suffix(".csv")
-    print(path)
+        file_tag = "{}_mu{}_s{}_n{}_seed{}".format(dist, mu, sigma, size, seed)
+        file_tag = file_tag.replace('.', "_")
+        path = Path(path, file_tag).with_suffix(".csv")
 
-    save_data(data, file=str(path), gzip=args.gzip)
+        out_file = str(path)
+
+    save_data(data, out_file=out_file, gzip=args.gzip)
 
 
 if __name__ == "__main__":
