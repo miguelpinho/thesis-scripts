@@ -1,5 +1,6 @@
 .env
 *.csv
+*.pdf
 
 # vscode
 .vscode/*
