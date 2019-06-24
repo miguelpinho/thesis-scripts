@@ -129,8 +129,6 @@ def main():
         hist_path = Path(out_folder, in_path.stem + tag).with_suffix('.pdf')
         save_width_hist(width, hist_path, bits=args.bits)
 
-    print(width)
-
 
 if __name__ == "__main__":
     main()
