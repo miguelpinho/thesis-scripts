@@ -65,13 +65,13 @@ def get_args():
     )
     parser.add_argument(
         '--mu',
-        type=int,
+        type=float,
         default=0,
         help='''mean of the distribution'''
     )
     parser.add_argument(
         '--sigma',
-        type=int,
+        type=float,
         default=1,
         help='''standard deviation of the distribution'''
     )
@@ -112,8 +112,10 @@ def main():
         print("Invalid out-dir path: {}".format(path))
         sys.exit()
 
-    file_tag = "{}_mu{}_s{}_n{}_seed{}.csv".format(dist, mu, sigma, size, seed)
-    path = path / file_tag
+    file_tag = "{}_mu{}_s{}_n{}_seed{}".format(dist, mu, sigma, size, seed)
+    file_tag = file_tag.replace('.', "_")
+    path = Path(path, file_tag).with_suffix(".csv")
+    print(path)
 
     save_data(data, file=str(path), gzip=args.gzip)
 
