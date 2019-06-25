@@ -51,10 +51,10 @@ def read_data(in_file=None):
     return np.loadtxt(in_file, dtype=int)
 
 
-def save_width_hist(data, file, bits=64, title=None):
+def save_width_hist(data, file, bits=64, cumulative=False, title=None):
     """Saves an integer width values array as a .pdf histogram figure."""
     plt.hist(data, bins=bits+1, range=(0, bits+1),
-             density=True, facecolor='blue')
+             density=True, cumulative=cumulative, facecolor='blue')
 
     plt.xlabel('Bit-width [bits]')
     plt.ylabel('Fraction')
@@ -106,6 +106,12 @@ def get_args():
         default=False,
         help='''output width histogram as .pdf figure file'''
     )
+    parser.add_argument(
+        '--cumulative',
+        action='store_true',
+        default=False,
+        help='''output cumulative width histogram as .pdf figure file'''
+    )
 
     return parser.parse_args()
 
@@ -142,8 +148,16 @@ def main():
         save_data(width, out_file=str(csv_path))
 
     if args.hist == True:
-        hist_path = Path(out_folder, in_stem + tag).with_suffix('.pdf')
+        hist_path = Path(out_folder, in_stem + tag +
+                         "_hist").with_suffix('.pdf')
         save_width_hist(width, hist_path, bits=args.bits)
+
+    if args.cumulative == True:
+        cumulative_path = Path(out_folder, in_stem + tag +
+                               "_cumulative").with_suffix('.pdf')
+        save_width_hist(width, cumulative_path,
+                        bits=args.bits, cumulative=True,
+                        title='Cumulative Bit-width Histogram')
 
 
 if __name__ == "__main__":
