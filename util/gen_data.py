@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 import sys
 import argparse
-import numpy as np
 from pathlib import Path
+
+import numpy as np
 
 """
 Util and module for generating reproducible integer data sets.

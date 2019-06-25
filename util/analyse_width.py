@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 import sys
 import argparse
+from pathlib import Path
+
 import numpy as np
 import matplotlib.pyplot as plt
-from pathlib import Path
+
 from gen_data import save_data
 
 """

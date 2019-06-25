@@ -5,12 +5,13 @@
 Util and module for running gem5 full-system simulations.
 """
 
-import argparse
-from datetime import datetime
-import subprocess
 import os
 import sys
+import argparse
+import subprocess
 from pathlib import Path
+from datetime import datetime
+
 from dotenv import load_dotenv
 
 
