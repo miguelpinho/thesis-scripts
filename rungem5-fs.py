@@ -140,8 +140,7 @@ def get_arguments():
     parser_script = subparsers.add_parser(
         'script', help='restore and run script')
     parser_script.add_argument(
-        '--script',
-        default=argparse.SUPPRESS,
+        'script_path',
         help='''script to run on boot'''
     )
 
@@ -151,7 +150,7 @@ def get_arguments():
     parser_benchmark.add_argument(
         'bench',
         choices=('all', 'spec2006', 'parsec3',
-                 'splash2', 'apps', 'micro-kernels'),
+                 'splash2', 'apps', 'kernels'),
         help='benchmark suite to run'
     )
     parser_benchmark.add_argument(
@@ -324,17 +323,28 @@ def get_config_args(args, paths):
         args_config.extend(['--caches', '--l2cache'])
 
     # action specific
-    if args.action == "checkpoint":
+    if args.action == 'checkpoint':
         script = Path.cwd() / "sim-scripts" / "checkpoint.sh"
         args_config.append("--script={}".format(script))
+    elif ags.action == 'script':
+        script = Path(args.script_path)
+        if not Path.is_file():
+            print('Invalid script path: {}.'.format(args.script_path))
+            sys.exit()
+        args_config.append("--script={}".format(script))
+
+    if args.action in ['restart', 'script', 'benchmark']:
+        args_config.append("--checkpoint-dir={}".format(paths['GEM5_CKPOINT']))
+        args_config.append("--checkpoint-restore={}".format(1))
+        args_config.append("--restore-with-cpu={}".format('AtomicSimpleCPU'))
 
     return args_config
 
 
 def run_fs(paths, bin_gem5, args_gem5, config_script, args_config):
     """Run gem5 with the given arguments."""
-    args = [str(bin_gem5)] + args_gem5 + \
-        [str(config_script)] + args_config
+    args = [str(bin_gem5)] + args_gem5 +
+    [str(config_script)] + args_config
 
     print('Running command:\n{}'.format(' \\\n'.join(args)))
 

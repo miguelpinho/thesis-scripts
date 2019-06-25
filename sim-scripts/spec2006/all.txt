@@ -1,4 +1,0 @@
-libquantum.sh
-hmmer.sh
-libquantum-small.sh
-hmmer-small.sh
