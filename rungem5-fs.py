@@ -334,7 +334,8 @@ def get_config_args(args, paths):
         args_config.append("--script={}".format(script))
 
     if args.action in ['restart', 'script', 'benchmark']:
-        args_config.append("--checkpoint-dir={}".format(paths['GEM5_CKPOINT']))
+        args_config.append(
+            "--checkpoint-dir={}".format(paths['GEM5_CKPOINT'] / 'fs'))
         args_config.append("--checkpoint-restore={}".format(1))
         args_config.append("--restore-with-cpu={}".format('AtomicSimpleCPU'))
 
