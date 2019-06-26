@@ -74,6 +74,11 @@ def get_arguments():
         default=argparse.SUPPRESS,
         help='''m5out sub-folder name. Overrides default folder for action''',
     )
+    parser.add_argument(
+        '--wildcard-gem5',
+        default=None,
+        help='''wildcard arguments to be passed to gem5 binary'''
+    )
     # simulation options
     parser.add_argument(
         '-N',
@@ -118,7 +123,7 @@ def get_arguments():
     parser_info = subparsers.add_parser(
         'info', help='show the gem5 or config file help')
     parser_info.add_argument(
-        'info-option',
+        'info_option',
         choices=('gem5', 'config'),
         default='gem5',
         nargs='?',
@@ -279,17 +284,33 @@ def get_gem5_bin(args, paths):
 
 def get_gem5_args(args, paths):
     """Returns the list of args to be passed to the gem5 binary."""
-    args_gem5 = ['--redirect-stdout', '--redirect-stderr']
+    if args.action == 'info' and args.info_option == 'gem5':
+        return ['--help']
+    else:
+        args_gem5 = []
 
-    out_path = get_folder_path(args, paths) / get_run_tag(args)
-    args_gem5.append("--outdir={}".format(out_path))
+        if args.action == 'info' and args.info_option == 'config':
+            args_gem5.extend(['--redirect-stderr'])
+        else:
+            args_gem5.extend(['--redirect-stdout', '--redirect-stderr'])
+
+        out_path = get_folder_path(args, paths) / get_run_tag(args)
+        args_gem5.append("--outdir={}".format(out_path))
+
+        if not args.wildcard_gem5 is None:
+            wildcards = args.wildcard_gem5.split()
+            args_gem5.extend(wildcards)
 
     return args_gem5
 
 
 def get_config_args(args, paths):
     """Returns the list of args to be passed to the config script."""
-    # TODO: Fix how paths are generated (Path). Add disk image path option
+    # TODO: Fix how paths are generated (Path).
+    if args.action == 'info':
+        if args.info_option == 'config':
+            return ['--help']
+
     args_config = []
 
     num_cpus = args.cpu_cores
