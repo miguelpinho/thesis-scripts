@@ -334,7 +334,8 @@ def get_config_args(args, paths):
         args_config.append("--script={}".format(script))
 
     if args.action in ['restart', 'script', 'benchmark']:
-        args_config.append(
+        args_config.append("--checkpoint-restore={}".format(1))
+        args_config.append("--cpu-type={}".format('O3_ARM_v7a_3'))
             "--checkpoint-dir={}".format(paths['GEM5_CKPOINT'] / 'fs'))
         args_config.append("--checkpoint-restore={}".format(1))
         args_config.append("--restore-with-cpu={}".format('AtomicSimpleCPU'))
@@ -344,7 +345,7 @@ def get_config_args(args, paths):
 
 def run_fs(paths, bin_gem5, args_gem5, config_script, args_config):
     """Run gem5 with the given arguments."""
-    args = [str(bin_gem5)] + args_gem5 + [str(config_script)] + args_config
+    args=[str(bin_gem5)] + args_gem5 + [str(config_script)] + args_config
 
     print('Running command:\n{}'.format(' \\\n'.join(args)))
 
@@ -352,16 +353,16 @@ def run_fs(paths, bin_gem5, args_gem5, config_script, args_config):
 
 
 def main():
-    args = get_arguments()
+    args=get_arguments()
 
     load_env(args)
-    paths = get_paths(args)
+    paths=get_paths(args)
 
     print(paths)
-    bin_gem5 = get_gem5_bin(args, paths)
-    args_gem5 = get_gem5_args(args, paths)
-    config_script = paths['GEM5'] / 'configs' / 'example' / 'fs.py'
-    args_config = get_config_args(args, paths)
+    bin_gem5=get_gem5_bin(args, paths)
+    args_gem5=get_gem5_args(args, paths)
+    config_script=paths['GEM5'] / 'configs' / 'example' / 'fs.py'
+    args_config=get_config_args(args, paths)
 
     run_fs(paths, bin_gem5, args_gem5, config_script, args_config)
 
