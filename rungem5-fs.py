@@ -160,7 +160,8 @@ def get_arguments():
     )
     parser_benchmark.add_argument(
         '--workload',
-        choices=('tiny', 'small', 'large'),
+        choices=('test', 'tiny', 'small', 'normal', 'large'),
+        default='test',
         help='size of the benchmarks workload'
     )
 
@@ -232,6 +233,9 @@ def get_paths(args):
         sys.exit()
     paths['DISK'] = disk_path
 
+    # Output path
+    paths['OUT_PATH'] = get_folder_path(args, paths) / get_run_tag(args)
+
     return paths
 
 
@@ -294,8 +298,10 @@ def get_gem5_args(args, paths):
         else:
             args_gem5.extend(['--redirect-stdout', '--redirect-stderr'])
 
-        out_path = get_folder_path(args, paths) / get_run_tag(args)
-        args_gem5.append("--outdir={}".format(out_path))
+        if args.action == 'benchmark':
+            args_gem5.append('--outdir={}'.format(paths['OUT_PATH'] / r'{.}'))
+        else:
+            args_gem5.append('--outdir={}'.format(paths['OUT_PATH']))
 
         if not args.wildcard_gem5 is None:
             wildcards = args.wildcard_gem5.split()
@@ -353,6 +359,8 @@ def get_config_args(args, paths):
             print('Invalid script path: {}.'.format(args.script_path))
             sys.exit()
         args_config.append("--script={}".format(script))
+    elif args.action == 'benchmark':
+        args_config.append(r"--script={}")
 
     if args.action in ['restart', 'script', 'benchmark']:
         args_config.append("--cpu-type={}".format('O3_ARM_v7a_3'))
@@ -364,13 +372,33 @@ def get_config_args(args, paths):
     return args_config
 
 
-def run_fs(paths, bin_gem5, args_gem5, config_script, args_config):
+def run_fs(args, bin_gem5, args_gem5, config_script, args_config):
     """Run gem5 with the given arguments."""
-    args = [str(bin_gem5)] + args_gem5 + [str(config_script)] + args_config
+    run_args = [str(bin_gem5)] + args_gem5 + [str(config_script)] + args_config
 
-    print('Running command:\n{}'.format(' \\\n'.join(args)))
+    if args.action == 'bench':
+        run_args = ['parallel'] + ['"' + ' '.join(run_args) + '"'] + ['::::']
 
-    subprocess.run(args)
+        if args.bench == 'kernel':
+            bench_dir = Path.cwd() / 'sim-scripts'
+        else:
+            print('Unimplemented benchmark: {}.'.format(args.bench))
+            sys.exit()
+
+        if not bench_dir.is_dir():
+            print('Invalid benchmark dir: {}.'.format(bench_dir))
+            sys.exit()
+
+        bench_txt = bench_dir / args.workload
+        if not bench_txt.is_file():
+            print('Invalid benchmark list file: {}.'.format(bench_txt))
+            sys.exit()
+
+        run_args.append(str(bench_txt))
+
+    print('Running command:\n{}'.format(' \\\n'.join(run_args)))
+
+    subprocess.run(run_args)
 
 
 def main():
@@ -385,7 +413,7 @@ def main():
     config_script = paths['GEM5'] / 'configs' / 'example' / 'fs.py'
     args_config = get_config_args(args, paths)
 
-    run_fs(paths, bin_gem5, args_gem5, config_script, args_config)
+    run_fs(args, bin_gem5, args_gem5, config_script, args_config)
 
 
 if __name__ == "__main__":
