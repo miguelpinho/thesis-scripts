@@ -389,7 +389,7 @@ def run_fs(args, bin_gem5, args_gem5, config_script, args_config):
             print('Invalid benchmark dir: {}.'.format(bench_dir))
             sys.exit()
 
-        bench_txt = bench_dir / args.workload
+        bench_txt = bench_dir / (args.workload + '.txt')
         if not bench_txt.is_file():
             print('Invalid benchmark list file: {}.'.format(bench_txt))
             sys.exit()
