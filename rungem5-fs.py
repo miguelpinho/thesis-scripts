@@ -396,7 +396,7 @@ def run_fs(args, bin_gem5, args_gem5, config_script, args_config):
 
         run_args.append(str(bench_txt))
 
-    print('Running command:\n{}'.format(' \\\n'.join(run_args)))
+    print('Running command:\n{}'.format(' '.join(run_args)))
 
     subprocess.run(run_args)
 
