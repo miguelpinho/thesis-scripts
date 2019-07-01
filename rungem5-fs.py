@@ -237,7 +237,7 @@ def get_paths(args):
     paths['OUT_PATH'] = get_folder_path(args, paths) / get_run_tag(args)
 
     # Benchmark sim-scripts dir
-    if args.action == 'benchmarks':
+    if args.action == 'benchmark':
         sim_path = Path(__file__).resolve().parent / 'sim-scripts'
         if args.bench == 'kernels':
             bench_dir = sim_path / 'thesis-kernels'
