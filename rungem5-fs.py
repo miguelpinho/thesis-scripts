@@ -380,7 +380,7 @@ def run_fs(args, bin_gem5, args_gem5, config_script, args_config):
         run_args = ['parallel'] + ['"' + ' '.join(run_args) + '"'] + ['::::']
 
         if args.bench == 'kernel':
-            bench_dir = Path.cwd() / 'sim-scripts'
+            bench_dir = Path.cwd() / 'sim-scripts' / 'thesis-kernels'
         else:
             print('Unimplemented benchmark: {}.'.format(args.bench))
             sys.exit()
