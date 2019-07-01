@@ -45,8 +45,8 @@ def save_data(data, out_file=None, gzip=False):
 
 def get_args():
     """Parse gen_dataset util arguments."""
-    parser = argparse.ArgumentParser(description='''Generate an integer
-    dataset following a given random distribution''')
+    parser = argparse.ArgumentParser(
+        description='''Generate an integer dataset following a given random distribution''')
 
     parser.add_argument(
         '--dist',
