@@ -376,7 +376,7 @@ def run_fs(args, bin_gem5, args_gem5, config_script, args_config):
     """Run gem5 with the given arguments."""
     run_args = [str(bin_gem5)] + args_gem5 + [str(config_script)] + args_config
 
-    if args.action == 'bench':
+    if args.action == 'benchmark':
         run_args = ['parallel'] + ['"' + ' '.join(run_args) + '"'] + ['::::']
 
         if args.bench == 'kernel':
