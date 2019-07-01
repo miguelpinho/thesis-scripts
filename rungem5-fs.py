@@ -236,6 +236,21 @@ def get_paths(args):
     # Output path
     paths['OUT_PATH'] = get_folder_path(args, paths) / get_run_tag(args)
 
+    # Benchmark sim-scripts dir
+    if args.action == 'benchmarks':
+        sim_path = Path(__file__).resolve().parent / 'sim-scripts'
+        if args.bench == 'kernels':
+            bench_dir = sim_path / 'thesis-kernels'
+        else:
+            print('Unimplemented benchmark: {}.'.format(args.bench))
+            sys.exit()
+
+        if not bench_dir.is_dir():
+            print('Invalid benchmark dir: {}.'.format(bench_dir))
+            sys.exit()
+
+        paths['BENCH_DIR'] = bench_dir
+
     return paths
 
 
@@ -360,7 +375,7 @@ def get_config_args(args, paths):
             sys.exit()
         args_config.append("--script={}".format(script))
     elif args.action == 'benchmark':
-        args_config.append(r"--script={}")
+        args_config.append("--script={}/".format(paths['BENCH_DIR']) + r'{}')
 
     if args.action in ['restart', 'script', 'benchmark']:
         args_config.append("--cpu-type={}".format('O3_ARM_v7a_3'))
@@ -372,24 +387,14 @@ def get_config_args(args, paths):
     return args_config
 
 
-def run_fs(args, bin_gem5, args_gem5, config_script, args_config):
+def run_fs(args, paths, bin_gem5, args_gem5, config_script, args_config):
     """Run gem5 with the given arguments."""
     run_args = [str(bin_gem5)] + args_gem5 + [str(config_script)] + args_config
 
     if args.action == 'benchmark':
         run_args = ['parallel'] + ['"' + ' '.join(run_args) + '"'] + ['::::']
 
-        if args.bench == 'kernels':
-            bench_dir = Path.cwd() / 'sim-scripts' / 'thesis-kernels'
-        else:
-            print('Unimplemented benchmark: {}.'.format(args.bench))
-            sys.exit()
-
-        if not bench_dir.is_dir():
-            print('Invalid benchmark dir: {}.'.format(bench_dir))
-            sys.exit()
-
-        bench_txt = bench_dir / (args.workload + '.txt')
+        bench_txt = paths['BENCH_DIR'] / (args.workload + '.txt')
         if not bench_txt.is_file():
             print('Invalid benchmark list file: {}.'.format(bench_txt))
             sys.exit()
@@ -413,7 +418,7 @@ def main():
     config_script = paths['GEM5'] / 'configs' / 'example' / 'fs.py'
     args_config = get_config_args(args, paths)
 
-    run_fs(args, bin_gem5, args_gem5, config_script, args_config)
+    run_fs(args, paths, bin_gem5, args_gem5, config_script, args_config)
 
 
 if __name__ == "__main__":
