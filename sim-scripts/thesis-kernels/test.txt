@@ -1,2 +1,2 @@
-sim-scripts/thesis-kernels/gemm_tiny_ndist.sh
-sim-scripts/thesis-kernels/gemm_tiny_logndist.sh
+gemm_tiny_ndist.sh
+gemm_tiny_logndist.sh
