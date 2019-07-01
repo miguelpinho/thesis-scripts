@@ -93,15 +93,16 @@ def main():
         sys.exit()
 
     for tag, size in workload_sizes.items():
-        bench = []
+        bench_list = []
 
         for kernel in algebra_kernels:
             for d, data in data_dist.items():
                 blas = kernel[0]
                 level = kernel[1]
 
-                path = outdir / '{}_{}_{}.sh'.format(blas, tag, d)
-                bench.append(str(path))
+                bench = '{}_{}_{}.sh'.format(blas, tag, d)
+                path = outdir / bench
+                bench_list.append(bench)
                 prg = './build/{}'.format(blas)
                 prg_args = [size for i in range(level)]
                 prg_args.append("./data/{}".format(random.choice(data)))
@@ -110,7 +111,7 @@ def main():
 
         bench_file = outdir / '{}.txt'.format(tag)
         with open(bench_file, 'w') as outfile:
-            outfile.write('\n'.join(bench))
+            outfile.write('\n'.join(bench_list))
 
 
 if __name__ == "__main__":
