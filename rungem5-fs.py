@@ -392,7 +392,7 @@ def run_fs(args, paths, bin_gem5, args_gem5, config_script, args_config):
     run_args = [str(bin_gem5)] + args_gem5 + [str(config_script)] + args_config
 
     if args.action == 'benchmark':
-        run_args = ['parallel'] + ['"' + ' '.join(run_args) + '"'] + ['::::']
+        run_args = ['parallel'] + [' '.join(run_args)] + ['::::']
 
         bench_txt = paths['BENCH_DIR'] / (args.workload + '.txt')
         if not bench_txt.is_file():
