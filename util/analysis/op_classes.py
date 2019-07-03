@@ -34,7 +34,7 @@ def get_args():
     )
 
     parser.add_argument(
-        'infile',
+        'in_dir',
         help='''Input .csv file'''
     )
     parser.add_argument(
@@ -60,13 +60,29 @@ def get_op_hist(in_file):
 def main():
     args = get_args()
 
-    in_file = Path(args.infile)
-    if not in_file.is_file():
-        print('Invalid file path: {}.'.format(args.infile))
+    path = Path(args.in_dir)
+    if not path.is_dir():
+        print('Invalid dir path: {}.'.format(args.in_dir))
         sys.exit()
 
-    df = get_op_hist(in_file)
+    files = sorted(path.glob('*.csv'))
+
+    hists = [get_op_hist(f).drop(columns=['Count']).set_axis(
+        [f.stem], axis=1, inplace=False) for f in files]
+    df = pd.concat(hists, axis=1)
+
+    # drop op groups that do not appear
+    df = df.loc[(df != 0).any(axis=1)]
+
     print(df)
+    df.transpose().plot.bar(stacked=True)
+
+    if args.out_file is None:
+        out_file = Path().cwd() / 'op_hist.pdf'
+    else:
+        out_file = Path(args.out_file)
+
+    plt.savefig(out_file, bbox_inches='tight')
 
 
 if __name__ == "__main__":
