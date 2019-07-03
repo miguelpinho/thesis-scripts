@@ -64,9 +64,10 @@ data_dist = {
 
 
 def get_args():
-    """Return the parsed args for gen_kernel_scripts util."""
+    """Return parsed args for gen_kernel_scripts util."""
     parser = argparse.ArgumentParser(
-        description='''Generate the simulation scripts for thesis-kernels benchmarks''')
+        description='''Generate the simulation scripts for thesis-kernels benchmarks'''
+    )
 
     parser.add_argument(
         'outdir',
