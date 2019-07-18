@@ -378,7 +378,11 @@ def get_config_args(args, paths):
         args_config.append("--script={}/".format(paths['BENCH_DIR']) + r'{}')
 
     if args.action in ['restart', 'script', 'benchmark']:
-        args_config.append("--cpu-type={}".format('O3_ARM_v7a_3'))
+        if not args.fast_cpu:
+            args_config.append("--cpu-type={}".format('O3_ARM_v7a_3'))
+        else:
+            args_config.append("--cpu-type={}".format('AtomicSimpleCPU'))
+
         args_config.append(
             "--checkpoint-dir={}".format(paths['GEM5_CKPOINT'] / 'fs'))
         args_config.append("--checkpoint-restore={}".format(1))
