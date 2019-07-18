@@ -104,7 +104,7 @@ def get_arguments():
         '--no-caches',
         action="store_true",
         default=False,
-        help='''number of cores in each simulated cpu'''
+        help='''do not use l1 and l2 caches'''
     )
     parser.add_argument(
         '--fast-cpu',
@@ -361,7 +361,7 @@ def get_config_args(args, paths):
         sys.exit()
 
     # caches
-    if args.no_caches == False:
+    if not args.no_caches:
         args_config.extend(['--caches', '--l2cache'])
 
     # action specific
