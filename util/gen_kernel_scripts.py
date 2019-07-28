@@ -40,10 +40,10 @@ algebra_kernels = [
 
 # workload sizes
 workload_sizes = {
-    'tiny': '128',
-    'small': '256',
-    'normal': '512',
-    'large': '1024'
+    'tiny': ['2097125', '2048 1024', '128 128 128'],
+    'small': ['16777216', '4096 4096', '256 256 256'],
+    'normal': ['134217728', '16384 8192', '512 512 512'],
+    'large': ['1073741824', '32768 32768', '1024 1024 1024']
 }
 
 # data distributions
@@ -105,7 +105,8 @@ def main():
                 path = outdir / bench
                 bench_list.append(bench)
                 prg = './build/{}'.format(blas)
-                prg_args = [size for i in range(level)]
+                prg_args = []
+                prg_args.append(size[level-1])
                 prg_args.append("./data/{}".format(random.choice(data)))
 
                 print_script(path, prg, prg_args)

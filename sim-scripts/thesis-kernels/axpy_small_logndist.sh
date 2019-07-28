@@ -6,5 +6,5 @@ cd $KERNEL_DIR
 pwd                       
 ls                        
                           
-./build/axpy 256 ./data/lognormal_mu5_0_s3_5_n4194304_seed508617.csv                     
+./build/axpy 16777216 ./data/lognormal_mu5_0_s3_5_n4194304_seed594722.csv                     
 m5 exit                     

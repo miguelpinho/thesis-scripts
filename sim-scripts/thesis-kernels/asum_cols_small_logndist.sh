@@ -6,5 +6,5 @@ cd $KERNEL_DIR
 pwd                       
 ls                        
                           
-./build/asum_cols 256 256 ./data/lognormal_mu5_0_s3_5_n4194304_seed594722.csv                     
+./build/asum_cols 4096 4096 ./data/lognormal_mu5_0_s3_5_n4194304_seed742922.csv                     
 m5 exit                     

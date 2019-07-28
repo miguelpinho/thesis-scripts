@@ -6,5 +6,5 @@ cd $KERNEL_DIR
 pwd                       
 ls                        
                           
-./build/gemm 512 512 512 ./data/normal_mu0_0_s10000_0_n4194304_seed9705.csv                     
+./build/gemm 512 512 512 ./data/normal_mu0_0_s10000_0_n4194304_seed458196.csv                     
 m5 exit                     
