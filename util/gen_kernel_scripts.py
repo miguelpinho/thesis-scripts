@@ -88,7 +88,7 @@ def main():
         sys.exit()
 
     for tag, size in workload_sizes.items():
-        bench_list = []
+        benchmarks = {'1': [], '2': [], '3': []}
 
         for kernel in algebra_kernels:
             for d, data in data_dist.items():
@@ -97,7 +97,7 @@ def main():
 
                 bench = '{}_{}_{}.sh'.format(blas, tag, d)
                 path = outdir / bench
-                bench_list.append(bench)
+                benchmarks[str(level)].append(bench)
                 prg = './build/{}'.format(blas)
                 prg_args = []
                 prg_args.append(size[level-1])
@@ -105,9 +105,10 @@ def main():
 
                 print_script(path, prg, prg_args)
 
-        bench_file = outdir / '{}.txt'.format(tag)
-        with open(bench_file, 'w') as outfile:
-            outfile.write('\n'.join(bench_list))
+        for level, b in benchmarks.items():
+            bench_file = outdir / '{}_level{}.txt'.format(tag, level)
+            with open(bench_file, 'w') as outfile:
+                outfile.write('\n'.join(b))
 
 
 if __name__ == "__main__":

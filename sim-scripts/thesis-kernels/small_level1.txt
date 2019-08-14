@@ -1,0 +1,10 @@
+asum_small_ndist.sh
+asum_small_logndist.sh
+axpy_small_ndist.sh
+axpy_small_logndist.sh
+dot_small_ndist.sh
+dot_small_logndist.sh
+iamax_small_ndist.sh
+iamax_small_logndist.sh
+sqnrm2_small_ndist.sh
+sqnrm2_small_logndist.sh

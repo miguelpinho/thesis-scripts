@@ -1,0 +1,10 @@
+asum_normal_ndist.sh
+asum_normal_logndist.sh
+axpy_normal_ndist.sh
+axpy_normal_logndist.sh
+dot_normal_ndist.sh
+dot_normal_logndist.sh
+iamax_normal_ndist.sh
+iamax_normal_logndist.sh
+sqnrm2_normal_ndist.sh
+sqnrm2_normal_logndist.sh
