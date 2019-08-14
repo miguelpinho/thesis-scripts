@@ -89,11 +89,6 @@ def get_arguments():
         parallel. Overrides environment variable''',
     )
     parser.add_argument(
-        '--benchmarks-path',
-        help='''root directory for the benchmarks. Overrides environment
-        variable'''
-    )
-    parser.add_argument(
         '-C',
         '--cpu-cores',
         type=int,
@@ -145,13 +140,25 @@ def get_arguments():
     parser_script = subparsers.add_parser(
         'script', help='restore and run script')
     parser_script.add_argument(
-        'script_path',
+        'script',
         help='''script to run on boot'''
+    )
+
+    # "scriptset" action
+    parser_scriptset = subparsers.add_parser(
+        'scriptset',
+        help='runs several script simulations in parallel'
+    )
+    parser_scriptset.add_argument(
+        'script_set',
+        help='''list of scripts to run'''
     )
 
     # "benchmark" action
     parser_benchmark = subparsers.add_parser(
-        'benchmark', help='restore and run chosen benchmarks')
+        'benchmark',
+        help='runs a benchmark suite in parallel'
+    )
     parser_benchmark.add_argument(
         'bench',
         choices=('all', 'spec2006', 'parsec3',
@@ -251,6 +258,14 @@ def get_paths(args):
 
         paths['BENCH_DIR'] = bench_dir
 
+    if args.action == 'scriptset':
+        script_set = Path(args.script_set)
+        if not script_set.is_file():
+            print('Invalid script set file path: {}.'.
+                  format(script_set))
+        paths['SCRIPTS_DIR'] = script_set.parent
+        paths['SCRIPTS_FILE'] = script_set
+
     return paths
 
 
@@ -313,7 +328,7 @@ def get_gem5_args(args, paths):
         else:
             args_gem5.extend(['--redirect-stdout', '--redirect-stderr'])
 
-        if args.action == 'benchmark':
+        if args.action == 'benchmark' or args.action == 'scriptset':
             args_gem5.append('--outdir={}'.format(paths['OUT_PATH'] / r'{.}'))
         else:
             args_gem5.append('--outdir={}'.format(paths['OUT_PATH']))
@@ -369,15 +384,17 @@ def get_config_args(args, paths):
         script = Path.cwd() / "sim-scripts" / "checkpoint.sh"
         args_config.append("--script={}".format(script))
     elif args.action == 'script':
-        script = Path(args.script_path)
+        script = Path(args.script)
         if not script.is_file():
             print('Invalid script path: {}.'.format(args.script_path))
             sys.exit()
         args_config.append("--script={}".format(script))
     elif args.action == 'benchmark':
         args_config.append("--script={}/".format(paths['BENCH_DIR']) + r'{}')
+    elif args.action == 'scriptset':
+        args_config.append("--script={}/".format(paths['SCRIPTS_DIR']) + r'{}')
 
-    if args.action in ['restart', 'script', 'benchmark']:
+    if args.action in ['restart', 'script', 'benchmark', 'scriptset']:
         if not args.fast_cpu:
             args_config.append("--cpu-type={}".format('O3_ARM_v7a_3'))
         else:
@@ -405,6 +422,10 @@ def run_fs(args, paths, bin_gem5, args_gem5, config_script, args_config):
             sys.exit()
 
         run_args.append(str(bench_txt))
+    elif args.action == 'scriptset':
+        run_args = ['parallel', '--bar',
+                    '--max-procs={}'.format(args.sim_jobs)] + run_args + ['::::']
+        run_args.append(str(paths['SCRIPTS_FILE']))
 
     print('Running command:\n{}'.format(' '.join(run_args)))
 
