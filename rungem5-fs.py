@@ -79,6 +79,11 @@ def get_arguments():
         default=None,
         help='''wildcard arguments to be passed to gem5 binary'''
     )
+    parser.add_argument(
+        '--wildcard-config',
+        default=None,
+        help='''wildcard arguments to be passed to the python config script'''
+    )
     # simulation options
     parser.add_argument(
         '-N',
@@ -404,6 +409,10 @@ def get_config_args(args, paths):
             "--checkpoint-dir={}".format(paths['GEM5_CKPOINT'] / 'fs'))
         args_config.append("--checkpoint-restore={}".format(1))
         args_config.append("--restore-with-cpu={}".format('AtomicSimpleCPU'))
+
+    if not args.wildcard_config is None:
+        wildcards = args.wildcard_config.split()
+        args_config.extend(wildcards)
 
     return args_config
 
