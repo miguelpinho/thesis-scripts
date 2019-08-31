@@ -27,6 +27,16 @@ def get_args():
         help='''Output .pdf file'''
     )
     parser.add_argument(
+        '--range',
+        action='store_true',
+        help='''Toggle if the stat indexes are ranges'''
+    )
+    parser.add_argument(
+        '--max-bin',
+        default=None,
+        help='''Max bin value to plot'''
+    )
+    parser.add_argument(
         '--stat',
         default="stat",
         help='''The stat being plotted'''
@@ -56,9 +66,15 @@ def main():
     df = pd.read_csv(path_in)
     df = df.transpose()
     df[0] = df[0] / df[0].sum() * 100.0
+
     df.columns = [args.stat]
+    if (args.range == True):
+        df.index = df.index.map(lambda x: x.split('-')[0])
     df.index = df.index.astype('uint64')
     df = df.sort_index()
+    if (args.max_bin != None):
+        df = df.loc[df.index <= int(args.max_bin)]
+
     ax = df.plot.bar(rot=0)
     ax.set(xlabel=args.x_axis, ylabel='Percentage of Clock Cycles [%]',
            title=args.title)

@@ -3,13 +3,13 @@
     # BEGIN rule(s)
 
     BEGIN {
-        FS = "[:]|[ ]+";
-        pat = "[.]"stat"[:]"
+        FS = "[:)(]|[ ]+";
+        pat = "[.]"stat"[_][(]"
     }
 
     # Rule(s)
 
     $0~pat {
-        print $3 "," $4
+        print $2 "," $5 "," $6
     }
 
