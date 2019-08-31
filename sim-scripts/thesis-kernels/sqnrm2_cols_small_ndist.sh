@@ -6,5 +6,5 @@ cd $KERNEL_DIR
 pwd                       
 ls                        
                           
-./build/sqnrm2_cols 4096 4096 ./data/normal_mu0_0_s10000_0_n4194304_seed9705.csv                     
+./build/sqnrm2_cols 2048 2048 ./data/normal_mu0_0_s10000_0_n100000000_seed901738.csv                     
 m5 exit                     

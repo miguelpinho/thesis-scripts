@@ -40,25 +40,19 @@ algebra_kernels = [
 
 # workload sizes
 workload_sizes = {
-    'tiny': ['2097125', '2048 1024', '128 128 128'],
-    'small': ['16777216', '4096 4096', '256 256 256'],
-    'normal': ['134217728', '16384 8192', '512 512 512'],
-    'large': ['1073741824', '32768 32768', '1024 1024 1024']
+    'tiny': ['1098304', '1024 1024', '256 256 256'],
+    'small': ['4194304', '2048 2048', '512 512 512'],
+    'normal': ['16777216', '4096 4096', '1048 1048 1048'],
+    'large': ['67108864', '8192 8192', '2048 2048 2048']
 }
 
 # data distributions
 data_dist = {
     'ndist': [
-        'normal_mu0_0_s10000_0_n4194304_seed9705.csv',
-        'normal_mu0_0_s10000_0_n4194304_seed11904.csv',
-        'normal_mu0_0_s10000_0_n4194304_seed167413.csv',
-        'normal_mu0_0_s10000_0_n4194304_seed458196.csv'
+        'normal_mu0_0_s10000_0_n100000000_seed901738.csv',
     ],
     'logndist': [
-        'lognormal_mu5_0_s3_5_n4194304_seed508617.csv',
-        'lognormal_mu5_0_s3_5_n4194304_seed594722.csv',
-        'lognormal_mu5_0_s3_5_n4194304_seed742922.csv',
-        'lognormal_mu5_0_s3_5_n4194304_seed968017.csv'
+        'lognormal_mu5_0_s3_5_n100000000_seed152168.csv',
     ]
 }
 
@@ -94,7 +88,7 @@ def main():
         sys.exit()
 
     for tag, size in workload_sizes.items():
-        bench_list = []
+        benchmarks = {'1': [], '2': [], '3': []}
 
         for kernel in algebra_kernels:
             for d, data in data_dist.items():
@@ -103,7 +97,7 @@ def main():
 
                 bench = '{}_{}_{}.sh'.format(blas, tag, d)
                 path = outdir / bench
-                bench_list.append(bench)
+                benchmarks[str(level)].append(bench)
                 prg = './build/{}'.format(blas)
                 prg_args = []
                 prg_args.append(size[level-1])
@@ -111,9 +105,10 @@ def main():
 
                 print_script(path, prg, prg_args)
 
-        bench_file = outdir / '{}.txt'.format(tag)
-        with open(bench_file, 'w') as outfile:
-            outfile.write('\n'.join(bench_list))
+        for level, b in benchmarks.items():
+            bench_file = outdir / '{}_level{}.txt'.format(tag, level)
+            with open(bench_file, 'w') as outfile:
+                outfile.write('\n'.join(b))
 
 
 if __name__ == "__main__":
