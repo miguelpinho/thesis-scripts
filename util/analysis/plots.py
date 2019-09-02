@@ -98,19 +98,22 @@ def get_norm_stats(file, filter_out=None, drop_first_col=False,
     return df
 
 
-def plot_fuse_vs_nofuse(df_fuse, df_nofuse, yunit=None):
-    fig, axes = plt.subplots(nrows=1, ncols=2, sharey=True)
-    df_fuse.plot(kind='bar', stacked=True, ax = axes[0], legend=False,
-                 title='Fuse On')
-    df_nofuse.plot(kind='bar', stacked=True, ax = axes[1], legend=False,
-                   title='Fuse Off')
+def plot_comparison_stacked(dfall, labels, yunit=None,
+                            label_anchor=None):
+    
+    n_df = len(dfall)
+    
+    fig, axes = plt.subplots(nrows=1, ncols=n_df, sharey=True)
+    for i in range(n_df):
+        dfall[i].plot(kind='bar', stacked=True, ax = axes[i], legend=False,
+                      title=labels[i])
     
     if yunit is not None:
         vals = axes[0].get_yticks()
         axes[0].set_yticklabels(['{}{}'.format(v, yunit) for v in vals])
 
     h, l = axes[0].get_legend_handles_labels()
-    fig.legend(h, l, bbox_to_anchor=(1.07,0.6), loc='center')
+    fig.legend(h, l, bbox_to_anchor=label_anchor, loc='center')
     plt.subplots_adjust(left=0.07, right=0.93, wspace=0.1)
 
     return (fig, axes)    
@@ -134,7 +137,9 @@ ax_used = plot_clustered_stacked([df_used_fuse, df_used_nofuse],
 plt.savefig('fig/simd_fu_used_{}_{}.png'.format(bench_size[0], dist[0]),
             bbox_inches='tight', format='png', dpi=300)
 
-plot_fuse_vs_nofuse(df_used_fuse, df_used_nofuse, yunit='%')
+plot_comparison_stacked([df_used_fuse, df_used_nofuse], 
+                        ['With Fuse', 'Without Fuse'],
+                        yunit='%', label_anchor=(1.07,0.6))
 plt.savefig('fig/simd_fu_used_{}_{}.pdf'.format(bench_size[0], dist[0]),
             bbox_inches='tight', format='pdf')
 
