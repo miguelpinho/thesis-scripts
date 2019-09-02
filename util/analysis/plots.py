@@ -74,7 +74,8 @@ H is the hatch used for identification of the different dataframe"""
     return axe
 
 
-def get_norm_stats(file, filter_out=None, drop_zero=False, unit=None):
+def get_norm_stats(file, filter_out=None, drop_first_col=False,
+                   drop_empty_cols=False, unit=None):
     df = pd.read_csv(file)
     
     if filter is not None:
@@ -84,8 +85,10 @@ def get_norm_stats(file, filter_out=None, drop_zero=False, unit=None):
     df = df.set_index('benchmark')
     
     df = df.div(df.sum(axis=1), axis=0) * 100.0
-    if drop_zero:
-        df = df.drop(columns=['0'])        
+    if drop_first_col:
+        df = df.drop(columns=['0'])
+    if drop_empty_cols:
+        df = df.loc[:, (df != 0).any(axis=0)]
     if unit is not None:
         cols = df.columns.values.tolist()
         cols = [('{} {}' if (c is '1') else '{} {}s').format(c, unit) 
@@ -117,10 +120,10 @@ flag_zero = True
 
 df_used_fuse = get_norm_stats(fuse_dir / fu_used_file,
                               filter_out=dist[0],
-                              drop_zero=flag_zero, unit='FU')
+                              drop_first_col=flag_zero, unit='FU')
 df_used_nofuse = get_norm_stats(nofuse_dir / fu_used_file,
                                 filter_out=dist[0],
-                                drop_zero=flag_zero, unit='FU')
+                                drop_first_col=flag_zero, unit='FU')
 
 #print(df_used_fuse)
 #print(df_used_nofuse)
