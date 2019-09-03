@@ -9,7 +9,6 @@ Created on Sun Sep  1 14:14:46 2019
 
 from pathlib import Path
 import pandas as pd
-import matplotlib.cm as cm
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -21,6 +20,7 @@ nofuse_dir = Path('./no-fuse')
 fu_used_file = 'simd_fu_used.csv'
 fu_issued_file = 'simd_fu_issued.csv'
 fu_extra_file = 'simd_fu_extra.csv'
+width_class_file = 'width_class.csv'
 
 
 # Original function by 'jrjc' user:
@@ -74,19 +74,19 @@ H is the hatch used for identification of the different dataframe"""
     return axe
 
 
-def get_norm_stats(file, filter_out=None, drop_first_col=False,
+def get_norm_stats(file, filter_out=None, drop_cols=None,
                    drop_empty_cols=False, unit=None):
     df = pd.read_csv(file)
     
-    if filter is not None:
+    if filter_out is not None:
         df = df[df['benchmark'].str.contains(filter_out)]
     
     df['benchmark'] = df['benchmark'].map(lambda x: x.split('_')[0])
     df = df.set_index('benchmark')
     
     df = df.div(df.sum(axis=1), axis=0) * 100.0
-    if drop_first_col:
-        df = df.drop(columns=['0'])
+    if drop_cols is not None:
+        df = df.drop(columns=drop_cols)
     if drop_empty_cols:
         df = df.loc[:, (df != 0).any(axis=0)]
     if unit is not None:
@@ -98,7 +98,7 @@ def get_norm_stats(file, filter_out=None, drop_first_col=False,
     return df
 
 
-def plot_comparison_stacked(dfall, labels, yunit=None,
+def plot_comparison_stacked(dfall, labels=None, yunit=None,
                             label_anchor=None):
     
     n_df = len(dfall)
@@ -106,7 +106,7 @@ def plot_comparison_stacked(dfall, labels, yunit=None,
     fig, axes = plt.subplots(nrows=1, ncols=n_df, sharey=True)
     for i in range(n_df):
         dfall[i].plot(kind='bar', stacked=True, ax = axes[i], legend=False,
-                      title=labels[i])
+                      title=(None if (labels is None) else labels[i]))
     
     if yunit is not None:
         vals = axes[0].get_yticks()
@@ -123,10 +123,10 @@ flag_zero = True
 
 df_used_fuse = get_norm_stats(fuse_dir / fu_used_file,
                               filter_out=dist[0],
-                              drop_first_col=flag_zero, unit='FU')
+                              drop_cols=['0'], unit='FU')
 df_used_nofuse = get_norm_stats(nofuse_dir / fu_used_file,
                                 filter_out=dist[0],
-                                drop_first_col=flag_zero, unit='FU')
+                                drop_cols=['0'], unit='FU')
 
 #print(df_used_fuse)
 #print(df_used_nofuse)
@@ -138,8 +138,44 @@ plt.savefig('fig/simd_fu_used_{}_{}.png'.format(bench_size[0], dist[0]),
             bbox_inches='tight', format='png', dpi=300)
 
 plot_comparison_stacked([df_used_fuse, df_used_nofuse], 
-                        ['With Fuse', 'Without Fuse'],
+                        labels=['With Fuse', 'Without Fuse'],
                         yunit='%', label_anchor=(1.07,0.6))
 plt.savefig('fig/simd_fu_used_{}_{}.pdf'.format(bench_size[0], dist[0]),
             bbox_inches='tight', format='pdf')
 
+
+df_issued_fuse = get_norm_stats(fuse_dir / fu_issued_file,
+                                filter_out=dist[0],
+                                drop_cols=['0'],
+                                drop_empty_cols=True,
+                                unit='inst')
+df_issued_nofuse = get_norm_stats(nofuse_dir / fu_issued_file,
+                                  filter_out=dist[0],
+                                  drop_cols=['0'],
+                                  drop_empty_cols=True,
+                                  unit='inst')
+
+plot_comparison_stacked([df_issued_fuse, df_issued_nofuse],
+                        labels=['With Fuse', 'Without Fuse'],
+                        yunit='%', label_anchor=(1.07,0.6))
+plt.savefig('fig/simd_fu_issued_{}_{}.pdf'.format(bench_size[0], dist[0]),
+            bbox_inches='tight', format='pdf')
+
+df_extra_fuse = get_norm_stats(fuse_dir / fu_extra_file,
+                               filter_out=dist[0],
+                               drop_cols=['0'],
+                               drop_empty_cols=True,
+                               unit='inst')
+plot_comparison_stacked([df_issued_fuse, df_extra_fuse],
+                        labels=['Total issued instructions',
+                                'Fused instructions'],
+                        yunit='%', label_anchor=(1.07,0.6))
+plt.savefig('fig/simd_fu_issued_extra_{}_{}.pdf'.format(bench_size[0], dist[0]),
+            bbox_inches='tight', format='pdf')
+
+df_width_class = get_norm_stats(fuse_dir / width_class_file,
+                                filter_out=dist[0],
+                                drop_cols=['NoInfo','SimdNoInfo',
+                                           'SimdNoPacking'])
+plot_comparison_stacked([df_width_class],
+                        yunit='%', label_anchor=(1.07,0.6))
