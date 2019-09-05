@@ -15,12 +15,17 @@ import matplotlib.pyplot as plt
 
 bench_size = ('normal', 'Normal size')
 dist = ('logndist', 'Lognormal distribution')
-fuse_dir = Path('./fuse')
-nofuse_dir = Path('./no-fuse')
+config = '2FU'
+#config = '4FU'
+fuse_dir = Path('./stats/fuse-{}'.format(config))
+nofuse_dir = Path('./stats/no-fuse-{}'.format(config))
 fu_used_file = 'simd_fu_used.csv'
 fu_issued_file = 'simd_fu_issued.csv'
 fu_extra_file = 'simd_fu_extra.csv'
 width_class_file = 'width_class.csv'
+width_class_discard = ['NoInfo','SimdNoInfo','SimdNoPacking']
+width_class_labels = {'SimdPackingAlu':'Simd Alu',
+                      'SimdPackingMult':'Simd Mult'}
 
 
 # Original function by 'jrjc' user:
@@ -104,6 +109,9 @@ def plot_comparison_stacked(dfall, labels=None, yunit=None,
     n_df = len(dfall)
     
     fig, axes = plt.subplots(nrows=1, ncols=n_df, sharey=True)
+    if n_df == 1:
+        axes = (axes,)
+    
     for i in range(n_df):
         dfall[i].plot(kind='bar', stacked=True, ax = axes[i], legend=False,
                       title=(None if (labels is None) else labels[i]))
@@ -134,13 +142,15 @@ df_used_nofuse = get_norm_stats(nofuse_dir / fu_used_file,
 ax_used = plot_clustered_stacked([df_used_fuse, df_used_nofuse],
                                   ['fuse', 'no fuse'],
                                   yunit='%', H='///')
-plt.savefig('fig/simd_fu_used_{}_{}.png'.format(bench_size[0], dist[0]),
+plt.savefig('fig/simd_fu_used_{}_{}_{}.png'.format(bench_size[0],
+                dist[0], config),
             bbox_inches='tight', format='png', dpi=300)
 
-plot_comparison_stacked([df_used_fuse, df_used_nofuse], 
+plot_comparison_stacked([df_used_fuse, df_used_nofuse],
                         labels=['With Fuse', 'Without Fuse'],
                         yunit='%', label_anchor=(1.07,0.6))
-plt.savefig('fig/simd_fu_used_{}_{}.pdf'.format(bench_size[0], dist[0]),
+plt.savefig('fig/simd_fu_used_{}_{}_{}.pdf'.format(bench_size[0],
+                dist[0], config),
             bbox_inches='tight', format='pdf')
 
 
@@ -158,7 +168,8 @@ df_issued_nofuse = get_norm_stats(nofuse_dir / fu_issued_file,
 plot_comparison_stacked([df_issued_fuse, df_issued_nofuse],
                         labels=['With Fuse', 'Without Fuse'],
                         yunit='%', label_anchor=(1.07,0.6))
-plt.savefig('fig/simd_fu_issued_{}_{}.pdf'.format(bench_size[0], dist[0]),
+plt.savefig('fig/simd_fu_issued_{}_{}_{}.pdf'.format(bench_size[0], 
+                dist[0], config),
             bbox_inches='tight', format='pdf')
 
 df_extra_fuse = get_norm_stats(fuse_dir / fu_extra_file,
@@ -170,12 +181,16 @@ plot_comparison_stacked([df_issued_fuse, df_extra_fuse],
                         labels=['Total issued instructions',
                                 'Fused instructions'],
                         yunit='%', label_anchor=(1.07,0.6))
-plt.savefig('fig/simd_fu_issued_extra_{}_{}.pdf'.format(bench_size[0], dist[0]),
+plt.savefig('fig/simd_fu_issued_extra_{}_{}_{}.pdf'.format(bench_size[0], 
+                dist[0], config),
             bbox_inches='tight', format='pdf')
 
 df_width_class = get_norm_stats(fuse_dir / width_class_file,
                                 filter_out=dist[0],
-                                drop_cols=['NoInfo','SimdNoInfo',
-                                           'SimdNoPacking'])
+                                drop_cols=width_class_discard)
+df_width_class = df_width_class.rename(columns=width_class_labels)
 plot_comparison_stacked([df_width_class],
-                        yunit='%', label_anchor=(1.07,0.6))
+                        yunit='%', label_anchor=(1.08,0.6))
+plt.savefig('fig/width_classes_{}_{}_{}.pdf'.format(bench_size[0], dist[0],
+                config),
+            bbox_inches='tight', format='pdf')
