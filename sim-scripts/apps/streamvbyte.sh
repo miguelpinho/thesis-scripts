@@ -6,5 +6,5 @@ cd $APP_DIR
 pwd
 ls
 
-./example
+./benchmark 4000000 25
 m5 exit
