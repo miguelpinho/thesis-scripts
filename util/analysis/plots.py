@@ -31,7 +31,7 @@ width_class_labels = {'SimdPackingAlu':'Simd Alu',
 # Original function by 'jrjc' user:
 # https://stackoverflow.com/questions/22787209/how-to-have-clusters-of-stacked-bars-with-python-pandas
 def plot_clustered_stacked(dfall, labels=None, title=None, yunit=None,
-                           H="/", **kwargs):
+                           **kwargs):
     """Given a list of dataframes, with identical columns and index, create a clustered stacked bar plot. 
 labels is a list of the names of the dataframe, used for the legend
 title is a string for the title of the plot
@@ -41,25 +41,44 @@ H is the hatch used for identification of the different dataframe"""
     n_col = len(dfall[0].columns) 
     n_ind = len(dfall[0].index)
     axe = plt.subplot(111)
+    
+    bar_width = 0.15
+    bar_space = 0.1
+    cluster_space = 0.3
+    xmargin = 0.2
 
     for df in dfall : # for each data frame
         axe = df.plot(kind="bar",
-                      linewidth=0,
+                      linewidth=1,
                       stacked=True,
+                      width=1.0,
                       ax=axe,
                       legend=False,
                       grid=False,
                       **kwargs)  # make bar plots
 
     h,l = axe.get_legend_handles_labels() # get the handles we want to modify
-    for i in range(0, n_df * n_col, n_col): # len(h) = n_col * n_df
-        for j, pa in enumerate(h[i:i+n_col]):
-            for rect in pa.patches: # for each index
-                rect.set_x(rect.get_x() + 1 / float(n_df + 1) * i / float(n_col))
-                rect.set_hatch(H * int(i / n_col)) #edited part     
-                rect.set_width(1 / float(n_df + 1))
+    for i in range(0, n_df, 1):
+        for j in range(0, n_col, 1):
+            pa = h[i * n_col + j].patches
+        
+            for k in range(n_ind): # for each index
+                rect = pa[k]
+                
+                rect.set_x(xmargin + bar_width/2 + (bar_space+bar_width)*i +
+                           ((bar_space+bar_width)*(n_df-1) + bar_width/2 +
+                            cluster_space)*k)
+                rect.set_edgecolor('black') #edited part     
+                rect.set_width(bar_width)
 
-    axe.set_xticks((np.arange(0, 2 * n_ind, 2) + 1 / float(n_df + 1)) / 2.)
+    axe.set_xbound(lower=0,
+                   upper=(2*xmargin + n_df*n_col*bar_width + 
+                          (n_df-1)*bar_space +
+                          (n_col-1)*cluster_space))
+
+    xtick_0 = xmargin + (bar_width*n_df + bar_space*(n_df-1)) / 2 
+    xtick_diff = bar_width*n_df + bar_space*(n_df-1) + cluster_space
+    axe.set_xticks((np.arange(0, n_ind, 1) * xtick_diff) + xtick_0)
     axe.set_xticklabels(df.index, rotation = 0)
     if title is not None:
         axe.set_title(title)
@@ -67,14 +86,7 @@ H is the hatch used for identification of the different dataframe"""
         vals = axe.get_yticks()
         axe.set_yticklabels(['{}{}'.format(v, yunit) for v in vals])
 
-    # Add invisible data to add another legend
-    n=[]        
-    for i in range(n_df):
-        n.append(axe.bar(0, 0, color="gray", hatch=H * i))
-
     l1 = axe.legend(h[:n_col], l[:n_col], loc=[1.01, 0.5])
-    if labels is not None:
-        l2 = plt.legend(n, labels, loc=[1.01, 0.1]) 
     axe.add_artist(l1)
     return axe
 
@@ -141,56 +153,56 @@ df_used_nofuse = get_norm_stats(nofuse_dir / fu_used_file,
 
 ax_used = plot_clustered_stacked([df_used_fuse, df_used_nofuse],
                                   ['fuse', 'no fuse'],
-                                  yunit='%', H='///')
+                                  yunit='%')
 plt.savefig('fig/simd_fu_used_{}_{}_{}.png'.format(bench_size[0],
                 dist[0], config),
             bbox_inches='tight', format='png', dpi=300)
 
-plot_comparison_stacked([df_used_fuse, df_used_nofuse],
-                        labels=['With Fuse', 'Without Fuse'],
-                        yunit='%', label_anchor=(1.07,0.6))
-plt.savefig('fig/simd_fu_used_{}_{}_{}.pdf'.format(bench_size[0],
-                dist[0], config),
-            bbox_inches='tight', format='pdf')
-
-
-df_issued_fuse = get_norm_stats(fuse_dir / fu_issued_file,
-                                filter_out=dist[0],
-                                drop_cols=['0'],
-                                drop_empty_cols=True,
-                                unit='inst')
-df_issued_nofuse = get_norm_stats(nofuse_dir / fu_issued_file,
-                                  filter_out=dist[0],
-                                  drop_cols=['0'],
-                                  drop_empty_cols=True,
-                                  unit='inst')
-
-plot_comparison_stacked([df_issued_fuse, df_issued_nofuse],
-                        labels=['With Fuse', 'Without Fuse'],
-                        yunit='%', label_anchor=(1.07,0.6))
-plt.savefig('fig/simd_fu_issued_{}_{}_{}.pdf'.format(bench_size[0], 
-                dist[0], config),
-            bbox_inches='tight', format='pdf')
-
-df_extra_fuse = get_norm_stats(fuse_dir / fu_extra_file,
-                               filter_out=dist[0],
-                               drop_cols=['0'],
-                               drop_empty_cols=True,
-                               unit='inst')
-plot_comparison_stacked([df_issued_fuse, df_extra_fuse],
-                        labels=['Total issued instructions',
-                                'Fused instructions'],
-                        yunit='%', label_anchor=(1.07,0.6))
-plt.savefig('fig/simd_fu_issued_extra_{}_{}_{}.pdf'.format(bench_size[0], 
-                dist[0], config),
-            bbox_inches='tight', format='pdf')
-
-df_width_class = get_norm_stats(fuse_dir / width_class_file,
-                                filter_out=dist[0],
-                                drop_cols=width_class_discard)
-df_width_class = df_width_class.rename(columns=width_class_labels)
-plot_comparison_stacked([df_width_class],
-                        yunit='%', label_anchor=(1.08,0.6))
-plt.savefig('fig/width_classes_{}_{}_{}.pdf'.format(bench_size[0], dist[0],
-                config),
-            bbox_inches='tight', format='pdf')
+#plot_comparison_stacked([df_used_fuse, df_used_nofuse],
+#                        labels=['With Fuse', 'Without Fuse'],
+#                        yunit='%', label_anchor=(1.07,0.6))
+#plt.savefig('fig/simd_fu_used_{}_{}_{}.pdf'.format(bench_size[0],
+#                dist[0], config),
+#            bbox_inches='tight', format='pdf')
+#
+#
+#df_issued_fuse = get_norm_stats(fuse_dir / fu_issued_file,
+#                                filter_out=dist[0],
+#                                drop_cols=['0'],
+#                                drop_empty_cols=True,
+#                                unit='inst')
+#df_issued_nofuse = get_norm_stats(nofuse_dir / fu_issued_file,
+#                                  filter_out=dist[0],
+#                                  drop_cols=['0'],
+#                                  drop_empty_cols=True,
+#                                  unit='inst')
+#
+#plot_comparison_stacked([df_issued_fuse, df_issued_nofuse],
+#                        labels=['With Fuse', 'Without Fuse'],
+#                        yunit='%', label_anchor=(1.07,0.6))
+#plt.savefig('fig/simd_fu_issued_{}_{}_{}.pdf'.format(bench_size[0], 
+#                dist[0], config),
+#            bbox_inches='tight', format='pdf')
+#
+#df_extra_fuse = get_norm_stats(fuse_dir / fu_extra_file,
+#                               filter_out=dist[0],
+#                               drop_cols=['0'],
+#                               drop_empty_cols=True,
+#                               unit='inst')
+#plot_comparison_stacked([df_issued_fuse, df_extra_fuse],
+#                        labels=['Total issued instructions',
+#                                'Fused instructions'],
+#                        yunit='%', label_anchor=(1.07,0.6))
+#plt.savefig('fig/simd_fu_issued_extra_{}_{}_{}.pdf'.format(bench_size[0], 
+#                dist[0], config),
+#            bbox_inches='tight', format='pdf')
+#
+#df_width_class = get_norm_stats(fuse_dir / width_class_file,
+#                                filter_out=dist[0],
+#                                drop_cols=width_class_discard)
+#df_width_class = df_width_class.rename(columns=width_class_labels)
+#plot_comparison_stacked([df_width_class],
+#                        yunit='%', label_anchor=(1.08,0.6))
+#plt.savefig('fig/width_classes_{}_{}_{}.pdf'.format(bench_size[0], dist[0],
+#                config),
+#            bbox_inches='tight', format='pdf')
