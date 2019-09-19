@@ -4,7 +4,7 @@
 
     BEGIN {
         FS = "[:]|[*]";
-        print "clock,fu used,issued,extra,width"
+        print "tick,fu used,issued,extra,width"
     }
 
     # Rule(s)
