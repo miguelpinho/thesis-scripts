@@ -113,6 +113,11 @@ def get_arguments():
         help='''use AtomicSimpleCPU as the main cpu-type'''
     )
     parser.add_argument(
+        '--cpu-type',
+        default="O3_ARM_v7a_3",
+        help='''type of cpu to use'''
+    )
+    parser.add_argument(
         '--disk-image-file',
         default='ubuntu-14.04.img',
         help='''disk image for the simulation. Should be located in
@@ -401,7 +406,7 @@ def get_config_args(args, paths):
 
     if args.action in ['restart', 'script', 'benchmark', 'scriptset']:
         if not args.fast_cpu:
-            args_config.append("--cpu-type={}".format('O3_ARM_v7a_3'))
+            args_config.append("--cpu-type={}".format(args.cpu_type))
         else:
             args_config.append("--cpu-type={}".format('AtomicSimpleCPU'))
 
