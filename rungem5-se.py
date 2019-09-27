@@ -83,6 +83,11 @@ def get_arguments():
         default=False,
         help='''use AtomicSimpleCPU as the main cpu-type'''
     )
+    parser.add_argument(
+        '--cpu-type',
+        default="O3_ARM_v7a_3",
+        help='''type of cpu to use'''
+    )
     # binary to run in simulation
     parser.add_argument(
         '--cmd',
@@ -218,7 +223,7 @@ def get_config_args(args, paths):
         args_config.append("--cmd={}".format(args.cmd))
 
     if not args.fast_cpu:
-        args_config.append("--cpu-type={}".format('O3_ARM_v7a_3'))
+        args_config.append("--cpu-type={}".format(args.cpu_type))
     else:
         args_config.append("--cpu-type={}".format('AtomicSimpleCPU'))
 
