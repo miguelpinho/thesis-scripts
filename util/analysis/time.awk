@@ -3,12 +3,12 @@
     # BEGIN rule(s)
 
     BEGIN {
-        t = 0
+        print "clk cycles"
     }
 
     # Rule(s)
 
-    /final_tick/ {
-        print t++ "," $2
+    /system.switch_cpus.numCycles/ {
+        print $2
     }
 
