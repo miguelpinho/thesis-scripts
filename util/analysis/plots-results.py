@@ -4,7 +4,6 @@
 from pathlib import Path
 import altair as alt
 import pandas as pd
-import matplotlib.pyplot as plt
 
 
 def get_norm_stats(file, filter_out=None, drop_cols=None,
@@ -47,21 +46,6 @@ for ind in range(len(dfs)):
 
 dfs = pd.concat(dfs, sort=True).fillna(0)
 dfs = dfs.reset_index().melt(id_vars=['benchmark', 'config'])
-
-#vals = dfs.columns
-#dfs = [dfs[col].reset_index().rename(columns={col: 'val'}) for col in dfs.columns]
-#dfs = [df.pivot(index='benchmark', columns='config', values='val') for df in dfs]
-#
-#
-#def prep_df(df, name):
-#    df = df.stack().reset_index()
-#    df.columns = ['c1', 'c2', 'values']
-#    df['DF'] = name
-#    return df
-#
-#
-#dfs = [prep_df(dfs[ind], vals[ind]) for ind in range(len(dfs))]
-#df = pd.concat(dfs)
 
 chart = alt.Chart(dfs).mark_bar().encode(
         x=alt.X('config:N', sort='descending', title=None),
