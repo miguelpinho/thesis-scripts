@@ -35,9 +35,10 @@ folders = ['./stats/no-fuse-4FU', './stats/fuse-4FU', './stats/no-fuse-2FU',
 labels  = ['NF.4', 'F.4', 'NF.2', 'F.2', 'NF.1', 'F.1']
 legends = ['No fuse, 4 FUs', 'Fuse, 4 FUs', 'No fuse, 2 FUs', 'Fuse, 2 FUs',
            'No fuse, 1 FU', 'No fuse, 1 FU']
+workload = 'Applications'
 
 fu_usage_files = [Path(f) / 'simd_fu_used.csv' for f in folders]
-fu_usage_dfs = [get_norm_stats(f, unit='FU') for f in fu_usage_files]
+fu_usage_dfs = [get_norm_stats(f, unit='FU', drop_cols=['0']) for f in fu_usage_files]
 
 dfs = fu_usage_dfs
 for ind in range(len(dfs)):
@@ -51,12 +52,13 @@ chart = alt.Chart(dfs).mark_bar().encode(
         x=alt.X('config:N', sort='descending', title=None),
         y=alt.Y('sum(value):Q',
                 axis=alt.Axis(grid=False,
-                              title='Fraction of cycles [%]'),
-                scale=alt.Scale(domain=[0, 100])),
-        column=alt.Column('benchmark:N', title='Benchmark'),
+                              title='Fraction of total cycles [%]'),
+               # scale=alt.Scale(domain=[0, 100])),
+               ),
+        column=alt.Column('benchmark:N', title=workload),
         color=alt.Color('variable:N',
-                        scale=alt.Scale(
-                            scheme='yellowgreenblue'),
+                        scale=alt.Scale( scheme='set2'),
+                        sort='ascending',
                         legend=alt.Legend(title="Active SIMD FUs"))
         ).configure_view(strokeOpacity=0)
 
