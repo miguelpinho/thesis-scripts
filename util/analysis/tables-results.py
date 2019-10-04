@@ -18,7 +18,7 @@ for idx, lbl in enumerate(labels):
 
 df = pd.concat(dfs, axis='columns', sort=False)
 df.index = df.index.map(lambda x: x.split('_')[0])
-df.to_csv('tables/timing_kernels.csv')
+df.to_csv('tables/timing.csv')
 
 df_norm = df.div(df['NF.4'], axis='index').round(decimals=3)
-df_norm.to_csv('tables/norm_timing_kernels.csv')
+df_norm.to_csv('tables/norm_timing.csv')
