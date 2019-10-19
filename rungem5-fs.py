@@ -163,6 +163,12 @@ def get_arguments():
         'script_set',
         help='''list of scripts to run'''
     )
+    parser.add_argument(
+        '--runs',
+        type=int,
+        default=1,
+        help='''number of runs for each script'''
+    )
 
     # "benchmark" action
     parser_benchmark = subparsers.add_parser(
@@ -339,7 +345,8 @@ def get_gem5_args(args, paths):
             args_gem5.extend(['--redirect-stdout', '--redirect-stderr'])
 
         if args.action == 'benchmark' or args.action == 'scriptset':
-            args_gem5.append('--outdir={}'.format(paths['OUT_PATH'] / r'{.}'))
+            args_gem5.append(
+                '--outdir={}'.format(paths['OUT_PATH'] / r'{1.}_{2}'))
         else:
             args_gem5.append('--outdir={}'.format(paths['OUT_PATH']))
 
@@ -402,7 +409,8 @@ def get_config_args(args, paths):
     elif args.action == 'benchmark':
         args_config.append("--script={}/".format(paths['BENCH_DIR']) + r'{}')
     elif args.action == 'scriptset':
-        args_config.append("--script={}/".format(paths['SCRIPTS_DIR']) + r'{}')
+        args_config.append(
+            "--script={}/".format(paths['SCRIPTS_DIR']) + r'{1}')
 
     if args.action in ['restart', 'script', 'benchmark', 'scriptset']:
         if not args.fast_cpu:
@@ -437,9 +445,14 @@ def run_fs(args, paths, bin_gem5, args_gem5, config_script, args_config):
 
         run_args.append(str(bench_txt))
     elif args.action == 'scriptset':
+        if args.runs < 1:
+            print('Invalid number of runs: {}'.format(args.runs))
+
         run_args = ['parallel', '--bar',
                     '--max-procs={}'.format(args.sim_jobs)] + run_args + ['::::']
         run_args.append(str(paths['SCRIPTS_FILE']))
+        run_args.append(':::')
+        run_args.extend([str(n) for n in range(args.runs)])
 
     print('Running command:\n{}'.format(' '.join(run_args)))
 
