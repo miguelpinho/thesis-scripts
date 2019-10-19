@@ -1,0 +1,10 @@
+amax_cols_small_ndist.sh
+amax_cols_small_logndist.sh
+asum_cols_small_ndist.sh
+asum_cols_small_logndist.sh
+gemv_small_ndist.sh
+gemv_small_logndist.sh
+ger_small_ndist.sh
+ger_small_logndist.sh
+sqnrm2_cols_small_ndist.sh
+sqnrm2_cols_small_logndist.sh

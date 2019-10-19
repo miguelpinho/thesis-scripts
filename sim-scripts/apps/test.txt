@@ -1,0 +1,6 @@
+libpopcnt.sh
+minimap2.sh
+simdjson.sh
+test.txt
+utf8_lemire.sh
+utf8_range.sh

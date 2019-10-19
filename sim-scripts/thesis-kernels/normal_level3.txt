@@ -1,0 +1,2 @@
+gemm_normal_ndist.sh
+gemm_normal_logndist.sh

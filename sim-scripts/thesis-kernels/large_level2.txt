@@ -1,0 +1,10 @@
+amax_cols_large_ndist.sh
+amax_cols_large_logndist.sh
+asum_cols_large_ndist.sh
+asum_cols_large_logndist.sh
+gemv_large_ndist.sh
+gemv_large_logndist.sh
+ger_large_ndist.sh
+ger_large_logndist.sh
+sqnrm2_cols_large_ndist.sh
+sqnrm2_cols_large_logndist.sh

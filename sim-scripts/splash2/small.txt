@@ -1,0 +1,12 @@
+barnes_simsmall_1.sh
+cholesky_simsmall_1.sh
+fft_simsmall_1.sh
+fmm_simsmall_1.sh
+lu_cb_simsmall_1.sh
+lu_ncb_simsmall_1.sh
+ocean_cp_simsmall_1.sh
+ocean_ncp_simsmall_1.sh
+radix_simsmall_1.sh
+raytrace_simsmall_1.sh
+water_nsquared_simsmall_1.sh
+water_spatial_simsmall_1.sh
