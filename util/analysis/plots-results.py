@@ -36,9 +36,11 @@ folders = ['./stats/no-fuse-4FU', './stats/fuse-4FU', './stats/no-fuse-2FU',
 labels  = ['NF.4', 'F.4', 'NF.2', 'F.2', 'NF.1', 'F.1']
 legends = ['No fuse, 4 FUs', 'Fuse, 4 FUs', 'No fuse, 2 FUs', 'Fuse, 2 FUs',
            'No fuse, 1 FU', 'No fuse, 1 FU']
-workload = 'Kernels'
+workload = 'Apps'
+config_order = ['NF.4', 'F.4', 'NF.2', 'F.2', 'NF.1', 'F.1']
 
 fu_usage_files = [Path(f) / 'simd_fu_used.csv' for f in folders]
+
 
 dfs = [get_stats(f, norm=True, drop_cols=['0'], unit='FU')
        for f in fu_usage_files]
@@ -52,11 +54,11 @@ dfs.to_csv('tables/simd_usage.csv', float_format='%g')
 dfs = dfs.reset_index().melt(id_vars=['benchmark', 'config'])
 
 chart = alt.Chart(dfs).mark_bar().encode(
-        x=alt.X('config:N', sort='descending', title=None),
+        x=alt.X('config:N', sort=config_order, title=None),
         y=alt.Y('sum(value):Q',
                 axis=alt.Axis(grid=False,
                               title='Fraction of total cycles [%]'),
-               # scale=alt.Scale(domain=[0, 100])),
+                scale=alt.Scale(domain=[0, 90]),
                ),
         column=alt.Column('benchmark:N', title=workload),
         color=alt.Color('variable:N',
@@ -65,7 +67,8 @@ chart = alt.Chart(dfs).mark_bar().encode(
                         legend=alt.Legend(title="Active SIMD FUs"))
         ).configure_view(strokeOpacity=0)
 
-chart.save('fig/simd_usage.svg', webdriver='firefox')
+#chart.save('fig/simd_usage.svg', webdriver='firefox')
+
 
 dfs = [get_stats(f) for f in fu_usage_files]
 for ind in range(len(dfs)):
@@ -86,21 +89,21 @@ dfs = dfs.merge(ref_energy.rename('ref_energy'), left_index=True,
 dfs['norm_power']  = dfs['energy'] / cycles
 dfs['norm_energy'] = dfs['energy'] / dfs['ref_cycles']
 dfs['energy_gain'] = dfs['ref_energy'] / dfs['energy'] 
-dfs['energy_saving'] = 1 - dfs['energy'] / dfs['ref_energy']
+dfs['energy_saving'] = 100 * (1 - dfs['energy'] / dfs['ref_energy'])
 
 dfs.to_csv('tables/simd_fu_stats.csv', float_format='%g')
 
 dfs = dfs.reset_index()
     
-chart = alt.Chart(dfs).mark_bar().encode(
+fuse_dfs = dfs.loc[dfs['config'].isin(['F.1', 'F.2', 'F.4'])]
+chart = alt.Chart(fuse_dfs).mark_bar().encode(
     x=alt.X('config:N', sort='descending', title=None),
     y=alt.Y('energy_saving:Q',
             axis=alt.Axis(grid=False,
-                          title='Fraction of SIMD unit energy saving',
-                          format='%'),
-            scale=alt.Scale(domain=[0, 0.4])
+                          title='Fraction of SIMD unit energy saving [%]'),
+            scale=alt.Scale(domain=[0, 40])
            ),
-    color=alt.value('lightgreen'),
+    color=alt.value('#66c2a5'),
     column=alt.Column('benchmark:N', title=workload)
     ).configure_view(strokeOpacity=0)
-chart.save('fig/simd_energy_saving.svg', webdriver='firefox')
+#chart.save('fig/simd_energy_saving.svg', webdriver='firefox')
