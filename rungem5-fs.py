@@ -448,7 +448,7 @@ def get_sim_jobs(args):
     if 'sim_jobs' in args:
         sim_jobs = args.sim_jobs
     elif 'MACHINE_MAX_JOBS' in os.environ:
-        sim_jobs = int(os.environ[p[2]])
+        sim_jobs = int(os.environ['MACHINE_MAX_JOBS'])
     else:
         print("The number of jobs was not passed. Using default of {}."
               .format(DEFAULT_SIM_JOBS))
