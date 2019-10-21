@@ -15,6 +15,9 @@ from datetime import datetime
 from dotenv import load_dotenv
 
 
+DEFAULT_SIM_JOBS = 4
+
+
 def get_arguments():
     """Parse rungem5 arguments."""
     parser = argparse.ArgumentParser(description='Run gem5 full-system.')
@@ -89,7 +92,7 @@ def get_arguments():
         '-N',
         '--sim-jobs',
         type=int,
-        default=4,
+        default=argparse.SUPPRESS,
         help='''max number of simulation jobs allowed to be running in
         parallel. Overrides environment variable''',
     )
@@ -441,13 +444,30 @@ def get_config_args(args, paths):
     return args_config
 
 
+def get_sim_jobs(args):
+    if 'sim_jobs' in args:
+        sim_jobs = args.sim_jobs
+    elif 'MACHINE_MAX_JOBS' in os.environ:
+        sim_jobs = int(os.environ[p[2]])
+    else:
+        print("The number of jobs was not passed. Using default of {}."
+              .format(DEFAULT_SIM_JOBS))
+        sim_jobs = DEFAULT_SIM_JOBS
+
+    if sim_jobs < 1:
+        print('Invalid number of sim-jobs: {}.'.format(args.runs))
+        sys.exit()
+
+    return sim_jobs
+
+
 def run_fs(args, paths, bin_gem5, args_gem5, config_script, args_config):
     """Run gem5 with the given arguments."""
     run_args = [str(bin_gem5)] + args_gem5 + [str(config_script)] + args_config
 
     if args.action == 'benchmark':
         run_args = ['parallel', '--bar',
-                    '--max-procs={}'.format(args.sim_jobs)] + run_args + ['::::']
+                    '--max-procs={}'.format(get_sim_jobs(args))] + run_args + ['::::']
 
         bench_txt = paths['BENCH_DIR'] / (args.workload + '.txt')
         if not bench_txt.is_file():
@@ -461,7 +481,7 @@ def run_fs(args, paths, bin_gem5, args_gem5, config_script, args_config):
             sys.exit()
 
         run_args = ['parallel', '--bar',
-                    '--max-procs={}'.format(args.sim_jobs)] + run_args + ['::::']
+                    '--max-procs={}'.format(get_sim_jobs(args))] + run_args + ['::::']
         run_args.append(str(paths['SCRIPTS_FILE']))
         run_args.append(':::')
         run_args.extend([str(n) for n in range(args.runs)])
