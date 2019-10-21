@@ -457,7 +457,8 @@ def run_fs(args, paths, bin_gem5, args_gem5, config_script, args_config):
         run_args.append(str(bench_txt))
     elif args.action == 'scriptset':
         if args.runs < 1:
-            print('Invalid number of runs: {}'.format(args.runs))
+            print('Invalid number of runs: {}.'.format(args.runs))
+            sys.exit()
 
         run_args = ['parallel', '--bar',
                     '--max-procs={}'.format(args.sim_jobs)] + run_args + ['::::']
