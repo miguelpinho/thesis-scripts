@@ -123,6 +123,11 @@ def get_arguments():
         help='''disk image for the simulation. Should be located in
         $M5_PATH/disks/'''
     )
+    parser.add_argument(
+        '--run-tag',
+        default=None,
+        help='''suffix for the output folder generated'''
+    )
 
     # "info" action
     parser_info = subparsers.add_parser(
@@ -316,7 +321,13 @@ def get_run_tag(args):
     # Timestamp
     time_tag = datetime.utcnow().strftime("%Hh%Mm")
 
-    return task_tag + '-' + cpus_tag + '_' + time_tag
+    # Custom tag
+    if args.run_tag is None:
+        custom_tag = ""
+    else:
+        custom_tag = "_" + args.run_tag
+
+    return task_tag + '-' + cpus_tag + '_' + time_tag + custom_tag
 
 
 def get_gem5_bin(args, paths):
