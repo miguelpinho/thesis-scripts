@@ -1,5 +1,0 @@
-amax_cols_small_logndist.sh
-asum_cols_small_logndist.sh
-gemv_small_logndist.sh
-ger_small_logndist.sh
-sqnrm2_cols_small_logndist.sh

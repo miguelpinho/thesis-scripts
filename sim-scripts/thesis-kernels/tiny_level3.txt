@@ -1,2 +1,0 @@
-gemm_tiny_ndist.sh
-gemm_tiny_logndist.sh

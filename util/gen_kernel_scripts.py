@@ -40,19 +40,27 @@ algebra_kernels = [
 
 # workload sizes
 workload_sizes = {
-    'tiny': ['1098304', '1024 1024', '256 256 256'],
-    'small': ['4194304', '2048 2048', '512 512 512'],
-    'normal': ['16777216', '4096 4096', '1048 1048 1048'],
-    'large': ['67108864', '8192 8192', '2048 2048 2048']
+    # 'tiny': ['1098304', '1024 1024', '256 256 256'],
+    # 'small': ['4194304', '2048 2048', '512 512 512'],
+    'normal': [['4194304', '10000'], ['4096 4096', '10'], ['1048 1048 1048', '10']],
+    # 'large': ['67108864', '8192 8192', '2048 2048 2048']
 }
 
 # data distributions
 data_dist = {
-    'ndist': [
-        'normal_mu0_0_s10000_0_n100000000_seed901738.csv',
+    '8bit': [
+        "normal_mu0_0_s45_0_n17000000_seed120197.csv",
+        "normal_mu0_0_s45_0_n17000000_seed25981.csv",
+        "normal_mu0_0_s45_0_n17000000_seed434121.csv",
+        "normal_mu0_0_s45_0_n17000000_seed874084.csv",
+        "normal_mu0_0_s45_0_n17000000_seed911960.csv"
     ],
-    'logndist': [
-        'lognormal_mu5_0_s3_5_n100000000_seed152168.csv',
+    '16bit': [
+        "lognormal_mu5_0_s3_5_n17000000_seed1750.csv",
+        "lognormal_mu5_0_s3_5_n17000000_seed270955.csv",
+        "lognormal_mu5_0_s3_5_n17000000_seed357477.csv",
+        "lognormal_mu5_0_s3_5_n17000000_seed512067.csv",
+        "lognormal_mu5_0_s3_5_n17000000_seed568863.csv"
     ]
 }
 
@@ -95,15 +103,17 @@ def main():
                 blas = kernel[0]
                 level = kernel[1]
 
-                bench = '{}_{}_{}.sh'.format(blas, tag, d)
-                path = outdir / bench
-                benchmarks[str(level)].append(bench)
-                prg = './build/{}'.format(blas)
-                prg_args = []
-                prg_args.append(size[level-1])
-                prg_args.append("./data/{}".format(random.choice(data)))
+                for idx, data_file in enumerate(data):
+                    bench = '{}_{}_{}_{}.sh'.format(blas, tag, d, idx)
+                    path = outdir / bench
+                    benchmarks[str(level)].append(bench)
+                    prg = './build/{}'.format(blas)
+                    prg_args = []
+                    prg_args.append(size[level-1][0])
+                    prg_args.append("./data/{}".format(data_file))
+                    prg_args.append(size[level-1][1])
 
-                print_script(path, prg, prg_args)
+                    print_script(path, prg, prg_args)
 
         for level, b in benchmarks.items():
             bench_file = outdir / '{}_level{}.txt'.format(tag, level)
