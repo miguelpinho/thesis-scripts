@@ -1,0 +1,8 @@
+./apps/integerNN.sh
+./apps/streamvbyte.sh
+./thesis-kernels/amax_cols_normal_logndist.sh
+./thesis-kernels/asum_cols_normal_logndist.sh
+./thesis-kernels/gemv_normal_logndist.sh
+./thesis-kernels/ger_normal_logndist.sh
+./thesis-kernels/sqnrm2_cols_normal_logndist.sh
+./thesis-kernels/gemm_normal_logndist.sh
