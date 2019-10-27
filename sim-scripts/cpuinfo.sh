@@ -1,4 +1,4 @@
 #!/bin/bash
 
-m5 checkpoint
+cat /proc/cpuinfo
 m5 exit
