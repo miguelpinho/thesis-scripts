@@ -6,5 +6,5 @@ cd $KERNEL_DIR
 pwd                       
 ls                        
                           
-./build/axpy 2097152 ./data/normal_mu0_0_s45_0_n17000000_seed120197.csv 10000                     
+./build/conv ./third_party/ComputeLibrary/data/images/800x600.ppm
 m5 exit                     
