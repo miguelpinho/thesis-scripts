@@ -87,7 +87,7 @@ class O3_ARM_v7a_AdvSimd(FUDesc):
                OpDesc(opClass='FloatMultAcc', opLat=4),
                OpDesc(opClass='FloatMisc', opLat=3) ]
     count = 1
-    fuseCap = 2
+    fuseCap = 3
     widthCap = 128
     simd = True
 
