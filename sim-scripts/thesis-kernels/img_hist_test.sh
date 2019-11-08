@@ -6,5 +6,5 @@ cd $KERNEL_DIR
 pwd                       
 ls                        
                           
-./build/img_hist ./third_party/ComputeLibrary/data/images/800x600.ppm
+./build/img_hist ./third_party/ComputeLibrary/data/images/1920x1080.ppm
 m5 exit                     
