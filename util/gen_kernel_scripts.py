@@ -147,7 +147,7 @@ def main():
     img_benchmarks = []
     for kernel in image_kernels:
         for img in data_img:
-            bench = '{}_{}.sh'.format(kernel, img)
+            bench = '{}_{}.sh'.format(kernel, img.split(sep='.')[0])
             path = outdir / bench
             img_benchmarks.append(bench)
 
