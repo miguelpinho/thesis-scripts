@@ -29,6 +29,7 @@ algebra_kernels = [
     ('axpy', 1),
     ('dot', 1),
     ('iamax', 1),
+    ('fft', 1),
     ('sqnrm2', 1),
     ('amax_cols', 2),
     ('asum_cols', 2),
@@ -38,7 +39,7 @@ algebra_kernels = [
     ('gemm', 3)
 ]
 
-# workload sizes
+# algebra workload sizes
 workload_sizes = {
     # 'tiny': ['1098304', '1024 1024', '256 256 256'],
     # 'small': ['4194304', '2048 2048', '512 512 512'],
@@ -46,7 +47,7 @@ workload_sizes = {
     # 'large': ['67108864', '8192 8192', '2048 2048 2048']
 }
 
-# data distributions
+# integer data distributions
 data_dist = {
     '8bit': [
         "normal_mu0_0_s45_0_n17000000_seed120197.csv",
@@ -62,6 +63,26 @@ data_dist = {
         "lognormal_mu5_0_s3_5_n17000000_seed512067.csv",
         "lognormal_mu5_0_s3_5_n17000000_seed568863.csv"
     ]
+}
+
+# image kernels
+image_kernels = [
+    "conv",
+    "img_hist",
+    "img_integral",
+    "img_erode",
+    "img_canny",
+    "img_cartoon",
+    "img_yuv444"
+]
+
+# ppm image files
+data_img = {
+    "image1.ppm",
+    "image2.ppm",
+    "image3.ppm",
+    "image4.ppm",
+    "image5.ppm"
 }
 
 
@@ -95,6 +116,7 @@ def main():
         print('Invalid outdir: {}'.format(args.outdir))
         sys.exit()
 
+    # generate algebra scripts
     for tag, size in workload_sizes.items():
         benchmarks = {'1': [], '2': [], '3': []}
 
@@ -107,6 +129,7 @@ def main():
                     bench = '{}_{}_{}_{}.sh'.format(blas, tag, d, idx)
                     path = outdir / bench
                     benchmarks[str(level)].append(bench)
+
                     prg = './build/{}'.format(blas)
                     prg_args = []
                     prg_args.append(size[level-1][0])
@@ -119,6 +142,22 @@ def main():
             bench_file = outdir / '{}_level{}.txt'.format(tag, level)
             with open(bench_file, 'w') as outfile:
                 outfile.write('\n'.join(b))
+
+    # generate image scripts
+    img_benchmarks = []
+    for kernel in image_kernels:
+        for img in data_img:
+            bench = '{}_{}.sh'.format(kernel, img)
+            path = outdir / bench
+            img_benchmarks.append(bench)
+
+            prg = './build/{}'.format(kernel)
+            prg_args = ['./data/{}'.format(img)]
+
+            print_script(path, prg, prg_args)
+    img_file = outdir / 'img.txt'
+    with open(img_file, 'w') as outfile:
+        outfile.write('\n'.join(img_benchmarks))
 
 
 if __name__ == "__main__":

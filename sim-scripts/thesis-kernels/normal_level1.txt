@@ -38,6 +38,16 @@ iamax_normal_16bit_1.sh
 iamax_normal_16bit_2.sh
 iamax_normal_16bit_3.sh
 iamax_normal_16bit_4.sh
+fft_normal_8bit_0.sh
+fft_normal_8bit_1.sh
+fft_normal_8bit_2.sh
+fft_normal_8bit_3.sh
+fft_normal_8bit_4.sh
+fft_normal_16bit_0.sh
+fft_normal_16bit_1.sh
+fft_normal_16bit_2.sh
+fft_normal_16bit_3.sh
+fft_normal_16bit_4.sh
 sqnrm2_normal_8bit_0.sh
 sqnrm2_normal_8bit_1.sh
 sqnrm2_normal_8bit_2.sh
