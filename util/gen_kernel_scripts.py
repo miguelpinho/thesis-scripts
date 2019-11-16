@@ -43,7 +43,7 @@ algebra_kernels = [
 workload_sizes = {
     # 'tiny': ['1098304', '1024 1024', '256 256 256'],
     # 'small': ['4194304', '2048 2048', '512 512 512'],
-    'normal': [['2097152', '100'], ['2048 1024', '200'], ['1048 524 524', '5']],
+    'normal': [['262144', '200'], ['2048 1024', '200'], ['1048 524 524', '5']],
     # 'large': ['67108864', '8192 8192', '2048 2048 2048']
 }
 
@@ -155,6 +155,7 @@ def main():
             prg_args = ['./data/{}'.format(img)]
 
             print_script(path, prg, prg_args)
+    img_benchmarks.sort()
     img_file = outdir / 'img.txt'
     with open(img_file, 'w') as outfile:
         outfile.write('\n'.join(img_benchmarks))

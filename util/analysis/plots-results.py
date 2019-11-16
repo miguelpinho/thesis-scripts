@@ -67,7 +67,7 @@ chart = alt.Chart(dfs).mark_bar().encode(
                         legend=alt.Legend(title="Active SIMD FUs"))
         ).configure_view(strokeOpacity=0)
 
-#chart.save('fig/simd_usage.svg', webdriver='firefox')
+chart.save('fig/simd_usage.svg', webdriver='firefox')
 
 
 dfs = [get_stats(f) for f in fu_usage_files]
@@ -106,4 +106,4 @@ chart = alt.Chart(fuse_dfs).mark_bar().encode(
     color=alt.value('#66c2a5'),
     column=alt.Column('benchmark:N', title=workload)
     ).configure_view(strokeOpacity=0)
-#chart.save('fig/simd_energy_saving.svg', webdriver='firefox')
+chart.save('fig/simd_energy_saving.svg', webdriver='firefox')
