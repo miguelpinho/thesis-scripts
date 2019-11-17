@@ -73,7 +73,9 @@ image_kernels = [
     "img_erode",
     "img_canny",
     "img_cartoon",
-    "img_yuv444"
+    "img_yuv444",
+    "img_median",
+    "img_scale"
 ]
 
 # ppm image files
