@@ -10,16 +10,16 @@ mv $GEM5_PATH/configs/common/cores/arm/O3_ARM_v7a.py \
 
 declare -A config
 config[NF_4]="O3_ARM_v7a_nofuse_4fu.py"
-config[NF_2]="O3_ARM_v7a_nofuse_2fu.py"
-config[NF_1]="O3_ARM_v7a_nofuse_1fu.py"
 config[F_4]="O3_ARM_v7a_fuse_4fu.py"
+config[NF_2]="O3_ARM_v7a_nofuse_2fu.py"
 config[F_2]="O3_ARM_v7a_fuse_2fu.py"
+config[NF_1]="O3_ARM_v7a_nofuse_1fu.py"
 config[F_1]="O3_ARM_v7a_fuse_1fu.py"
 
 for cfg in "${!config[@]}"; do
 	printf "\nRun %s config:\n" $cfg
 	cp ./o3-configs/${config[$cfg]} $GEM5_PATH/configs/common/cores/arm/O3_ARM_v7a.py
-	./rungem5-fs.py --runs=2 --run-tag=$cfg scriptset ./sim-scripts/thesis-benchmarks.txt
+	./rungem5-fs.py --ckpoints-tree --runs=1 --run-tag=$cfg scriptset ./sim-scripts/kernels.txt
 done
 
 printf "\nRestore %s/configs/common/cores/arm/O3_ARM_v7a.py" $GEM5_PATH
