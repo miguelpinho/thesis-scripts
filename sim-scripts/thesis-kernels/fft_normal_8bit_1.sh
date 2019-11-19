@@ -6,5 +6,5 @@ cd $KERNEL_DIR
 pwd                       
 ls                        
                           
-./build/fft 262144 ./data/normal_mu0_0_s45_0_n17000000_seed25981.csv 100                     
+./build/fft 65536 ./data/normal_mu0_0_s45_0_n17000000_seed25981.csv 400                     
 m5 exit                     
