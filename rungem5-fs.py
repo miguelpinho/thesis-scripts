@@ -54,6 +54,12 @@ def get_arguments():
         environment variable'''
     )
     parser.add_argument(
+        '--ckpoints-tree',
+        action="store_true",
+        default=False,
+        help='''use scriptset folder tree in the ckpoint dir'''
+    )
+    parser.add_argument(
         '--m5out-path',
         default=argparse.SUPPRESS,
         help='''root directory for the generated output. Overrides
@@ -421,7 +427,7 @@ def get_config_args(args, paths):
             sys.exit()
         args_config.append("--script={}".format(script))
     elif args.action == 'benchmark':
-        args_config.append("--script={}/".format(paths['BENCH_DIR']) + r'{}')
+        args_config.append("--script={}/".format(paths['BENCH_DIR']) + r'{1}')
     elif args.action == 'scriptset':
         args_config.append(
             "--script={}/".format(paths['SCRIPTS_DIR']) + r'{1}')
@@ -432,8 +438,10 @@ def get_config_args(args, paths):
         else:
             args_config.append("--cpu-type={}".format('AtomicSimpleCPU'))
 
-        args_config.append(
-            "--checkpoint-dir={}".format(paths['GEM5_CKPOINT'] / 'fs'))
+        if args.ckpoints_tree and args.action in ['benchmark', 'scriptset']:
+            args_config.append( "--checkpoint-dir={}/{}".format(paths['GEM5_CKPOINT'] / 'fs', r'{1.}'))
+        else:
+            args_config.append( "--checkpoint-dir={}".format(paths['GEM5_CKPOINT'] / 'fs'))
         args_config.append("--checkpoint-restore={}".format(1))
         args_config.append("--restore-with-cpu={}".format('AtomicSimpleCPU'))
 
