@@ -15,6 +15,9 @@ from datetime import datetime
 from dotenv import load_dotenv
 
 
+DEFAULT_SIM_JOBS = 4
+
+
 def get_arguments():
     """Parse rungem5 arguments."""
     parser = argparse.ArgumentParser(description='Run gem5 full-system.')
@@ -49,6 +52,12 @@ def get_arguments():
         default=argparse.SUPPRESS,
         help='''root directory for execution checkpoints. Overrides
         environment variable'''
+    )
+    parser.add_argument(
+        '--ckpoints-tree',
+        action="store_true",
+        default=False,
+        help='''use scriptset folder tree in the ckpoint dir'''
     )
     parser.add_argument(
         '--m5out-path',
@@ -89,7 +98,7 @@ def get_arguments():
         '-N',
         '--sim-jobs',
         type=int,
-        default=4,
+        default=argparse.SUPPRESS,
         help='''max number of simulation jobs allowed to be running in
         parallel. Overrides environment variable''',
     )
@@ -122,6 +131,11 @@ def get_arguments():
         default='ubuntu-14.04.img',
         help='''disk image for the simulation. Should be located in
         $M5_PATH/disks/'''
+    )
+    parser.add_argument(
+        '--run-tag',
+        default=None,
+        help='''suffix for the output folder generated'''
     )
 
     # "info" action
@@ -162,6 +176,12 @@ def get_arguments():
     parser_scriptset.add_argument(
         'script_set',
         help='''list of scripts to run'''
+    )
+    parser.add_argument(
+        '--runs',
+        type=int,
+        default=1,
+        help='''number of runs for each script'''
     )
 
     # "benchmark" action
@@ -310,7 +330,13 @@ def get_run_tag(args):
     # Timestamp
     time_tag = datetime.utcnow().strftime("%Hh%Mm")
 
-    return task_tag + '-' + cpus_tag + '_' + time_tag
+    # Custom tag
+    if args.run_tag is None:
+        custom_tag = ""
+    else:
+        custom_tag = "_" + args.run_tag
+
+    return task_tag + '-' + cpus_tag + '_' + time_tag + custom_tag
 
 
 def get_gem5_bin(args, paths):
@@ -339,7 +365,8 @@ def get_gem5_args(args, paths):
             args_gem5.extend(['--redirect-stdout', '--redirect-stderr'])
 
         if args.action == 'benchmark' or args.action == 'scriptset':
-            args_gem5.append('--outdir={}'.format(paths['OUT_PATH'] / r'{.}'))
+            args_gem5.append(
+                '--outdir={}'.format(paths['OUT_PATH'] / r'{1.}_{2}'))
         else:
             args_gem5.append('--outdir={}'.format(paths['OUT_PATH']))
 
@@ -400,9 +427,10 @@ def get_config_args(args, paths):
             sys.exit()
         args_config.append("--script={}".format(script))
     elif args.action == 'benchmark':
-        args_config.append("--script={}/".format(paths['BENCH_DIR']) + r'{}')
+        args_config.append("--script={}/".format(paths['BENCH_DIR']) + r'{1}')
     elif args.action == 'scriptset':
-        args_config.append("--script={}/".format(paths['SCRIPTS_DIR']) + r'{}')
+        args_config.append(
+            "--script={}/".format(paths['SCRIPTS_DIR']) + r'{1}')
 
     if args.action in ['restart', 'script', 'benchmark', 'scriptset']:
         if not args.fast_cpu:
@@ -410,8 +438,10 @@ def get_config_args(args, paths):
         else:
             args_config.append("--cpu-type={}".format('AtomicSimpleCPU'))
 
-        args_config.append(
-            "--checkpoint-dir={}".format(paths['GEM5_CKPOINT'] / 'fs'))
+        if args.ckpoints_tree and args.action in ['benchmark', 'scriptset']:
+            args_config.append( "--checkpoint-dir={}/{}".format(paths['GEM5_CKPOINT'] / 'fs', r'{1.}'))
+        else:
+            args_config.append( "--checkpoint-dir={}".format(paths['GEM5_CKPOINT'] / 'fs'))
         args_config.append("--checkpoint-restore={}".format(1))
         args_config.append("--restore-with-cpu={}".format('AtomicSimpleCPU'))
 
@@ -422,13 +452,30 @@ def get_config_args(args, paths):
     return args_config
 
 
+def get_sim_jobs(args):
+    if 'sim_jobs' in args:
+        sim_jobs = args.sim_jobs
+    elif 'MACHINE_MAX_JOBS' in os.environ:
+        sim_jobs = int(os.environ['MACHINE_MAX_JOBS'])
+    else:
+        print("The number of jobs was not passed. Using default of {}."
+              .format(DEFAULT_SIM_JOBS))
+        sim_jobs = DEFAULT_SIM_JOBS
+
+    if sim_jobs < 1:
+        print('Invalid number of sim-jobs: {}.'.format(args.runs))
+        sys.exit()
+
+    return sim_jobs
+
+
 def run_fs(args, paths, bin_gem5, args_gem5, config_script, args_config):
     """Run gem5 with the given arguments."""
     run_args = [str(bin_gem5)] + args_gem5 + [str(config_script)] + args_config
 
     if args.action == 'benchmark':
         run_args = ['parallel', '--bar',
-                    '--max-procs={}'.format(args.sim_jobs)] + run_args + ['::::']
+                    '--max-procs={}'.format(get_sim_jobs(args))] + run_args + ['::::']
 
         bench_txt = paths['BENCH_DIR'] / (args.workload + '.txt')
         if not bench_txt.is_file():
@@ -437,9 +484,15 @@ def run_fs(args, paths, bin_gem5, args_gem5, config_script, args_config):
 
         run_args.append(str(bench_txt))
     elif args.action == 'scriptset':
+        if args.runs < 1:
+            print('Invalid number of runs: {}.'.format(args.runs))
+            sys.exit()
+
         run_args = ['parallel', '--bar',
-                    '--max-procs={}'.format(args.sim_jobs)] + run_args + ['::::']
+                    '--max-procs={}'.format(get_sim_jobs(args))] + run_args + ['::::']
         run_args.append(str(paths['SCRIPTS_FILE']))
+        run_args.append(':::')
+        run_args.extend([str(n) for n in range(args.runs)])
 
     print('Running command:\n{}'.format(' '.join(run_args)))
 

@@ -1,2 +1,0 @@
-gemm_large_ndist.sh
-gemm_large_logndist.sh
