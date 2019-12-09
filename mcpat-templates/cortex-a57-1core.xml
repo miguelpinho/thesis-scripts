@@ -31,7 +31,7 @@
     <!--0: aggressive wire technology; 1: conservative wire technology -->
     <param name="interconnect_projection_type" value="0"/>
     <!--0: HP(High Performance Type); 1: LSTP(Low standby power) 2: LOP (Low Operating Power)  -->
-    <param name="device_type" value="0"/>
+    <param name="device_type" value="1"/>
     <!-- 0 no use; 1 use when possible -->
     <param name="longer_channel_device" value="0"/>
     <!-- 0 not enabled; 1 enabled -->
@@ -140,7 +140,7 @@
       <!-- please note: if target architecture is X86, then all the instructions refer to (fused) micro-ops -->
       <stat name="total_instructions" value="stats.system.switch_cpus.iq.iqInstsIssued"/>
       <stat name="int_instructions" value="stats.system.switch_cpus.iq.FU_type_0::No_OpClass + stats.system.switch_cpus.iq.FU_type_0::IntAlu + stats.system.switch_cpus.iq.FU_type_0::IntMult + stats.system.switch_cpus.iq.FU_type_0::IntDiv + stats.system.switch_cpus.iq.FU_type_0::IprAccess"/>
-      <stat name="fp_instructions" value="stats.system.switch_cpus.iq.fp_issued + stats.system.switch_cpus.iq.vec_issued"/>
+      <stat name="fp_instructions" value="stats.system.switch_cpus.iq.iqFloatInstsIssued + stats.system.switch_cpus.iq.iqVecInstsIssued"/>
       <stat name="branch_instructions" value="stats.system.switch_cpus.branchPred.condPredicted"/>
       <stat name="branch_mispredictions" value="stats.system.switch_cpus.branchPred.condIncorrect"/>
       <stat name="load_instructions" value="stats.system.switch_cpus.iq.FU_type_0::MemRead + stats.system.switch_cpus.iq.FU_type_0::InstPrefetch"/>
@@ -178,18 +178,18 @@
       <stat name="fp_inst_window_wakeup_accesses" value="stats.system.switch_cpus.iq.fp_inst_queue_wakeup_accesses + stats.system.switch_cpus.iq.vec_inst_queue_wakeup_accesses"/>
       <!--  RF accesses -->
       <stat name="int_regfile_reads" value="stats.system.switch_cpus.int_regfile_reads"/>
-      <stat name="float_regfile_reads" value="stats.system.switch_cpus.fp_regfile_reads + stats.system.switch_cpus.vec_regfile_reads"/>
+      <stat name="float_regfile_reads" value="stats.system.switch_cpus.fp_regfile_reads + 2 * stats.system.switch_cpus.vec_regfile_reads"/>
       <stat name="int_regfile_writes" value="stats.system.switch_cpus.int_regfile_writes"/>
-      <stat name="float_regfile_writes" value="stats.system.switch_cpus.fp_regfile_writes + stats.system.switch_cpus.vec_regfile_writes"/>
+      <stat name="float_regfile_writes" value="stats.system.switch_cpus.fp_regfile_writes + 2 * stats.system.switch_cpus.vec_regfile_writes"/>
       <!-- accesses to the working reg -->
       <stat name="function_calls" value="stats.system.switch_cpus.commit.function_calls"/>
       <stat name="context_switches" value="0"/>
       <!-- Number of Windows switches (number of function calls and returns)-->
       <!-- Alu stats by default, the processor has one FPU that includes the divider and
        multiplier. The fpu accesses should include accesses to multiplier and divider  -->
-      <stat name="ialu_accesses" value="stats.system.switch_cpus.iq.int_alu_accesses"/>
-      <stat name="fpu_accesses" value="stats.system.switch_cpus.iq.fp_alu_accesses + 2 * stats.system.switch_cpus.iq.vec_alu_accesses"/>
-      <stat name="mul_accesses" value="stats.system.switch_cpus.iq.FU_type_0::IntMult"/>
+      <stat name="ialu_accesses" value="stats.system.switch_cpus.iq.FU_type_0::No_OpClass + stats.system.switch_cpus.iq.FU_type_0::IntAlu + stats.system.switch_cpus.iq.FU_type_0::IprAccess"/>
+      <stat name="fpu_accesses" value="stats.system.switch_cpus.iq.iqFloatInstsIssued + 2 * (stats.system.switch_cpus.iq.iqVecInstsIssued - stats.system.switch_cpus.iq.iqVecInstsFused)"/>
+      <stat name="mul_accesses" value="stats.system.switch_cpus.iq.FU_type_0::IntMult + stats.system.switch_cpus.iq.FU_type_0::IntDiv"/>
       <stat name="cdb_alu_accesses" value="0"/>
       <stat name="cdb_mul_accesses" value="0"/>
       <stat name="cdb_fpu_accesses" value="0"/>
@@ -394,7 +394,7 @@
       <!-- current version of McPAT uses published values for base parameters of memory controller
       improvements on MC will be added in later versions. -->
       <!-- 1: low power; 0 high performance -->
-      <param name="type" value="0"/>
+      <param name="type" value="1"/>
       <!--DIMM IO bus clock rate MHz-->
       <param name="mc_clock" value="200"/>
       <!-- 0 means using ITRS default vdd -->
@@ -429,7 +429,7 @@
       <!-- For a minimum IP packet size of 84B at 10Gb/s, a new packet arrives every 67.2ns.
          the low bound of clock rate of a 10Gb MAC is 150Mhz -->
       <!-- 1: low power; 0 high performance -->
-      <param name="type" value="0"/>
+      <param name="type" value="1"/>
       <param name="clockrate" value="350"/>
       <!-- 0 means using ITRS default vdd -->
       <param name="vdd" value="0"/>
@@ -450,7 +450,7 @@
       <!-- For a minimum PCIe packet size of 84B at 8Gb/s per lane (PCIe 3.0), a new packet arrives every 84ns.
          the low bound of clock rate of a PCIe per lane logic is 120Mhz -->
       <!-- 1: low power; 0 high performance -->
-      <param name="type" value="0"/>
+      <param name="type" value="1"/>
       <param name="withPHY" value="1"/>
       <param name="clockrate" value="350"/>
       <!-- 0 means using ITRS default vdd -->
