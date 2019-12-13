@@ -29,6 +29,10 @@
 
 from m5.objects import *
 
+# The high performance core FU Pool is based on Apple's A12 Vortex
+# public information on execution latency and throughput
+# https://www.anandtech.com/show/13392/the-iphone-xs-xs-max-review-unveiling-the-silicon-secrets/3
+
 # Simple ALU Instructions have a latency of 1
 class O3_ARM_v7a_Simple_Int(FUDesc):
     opList = [ OpDesc(opClass='IntAlu', opLat=1) ]
@@ -41,7 +45,6 @@ class O3_ARM_v7a_Complex_Int(FUDesc):
                OpDesc(opClass='IprAccess', opLat=3, pipelined=True) ]
     count = 2
 
-
 # Floating point instructions
 class O3_ARM_v7a_FP(FUDesc):
     opList = [ OpDesc(opClass='FloatAdd', opLat=3),
@@ -52,7 +55,7 @@ class O3_ARM_v7a_FP(FUDesc):
                OpDesc(opClass='FloatMult', opLat=4),
                OpDesc(opClass='FloatMultAcc', opLat=4),
                OpDesc(opClass='FloatMisc', opLat=3) ]
-    count = 1
+    count = 2
     widthCap = 128
     floatp = True
 
@@ -77,20 +80,11 @@ class O3_ARM_v7a_AdvSimd(FUDesc):
                OpDesc(opClass='SimdFloatMisc', opLat=3),
                OpDesc(opClass='SimdFloatMult', opLat=4),
                OpDesc(opClass='SimdFloatMultAcc',opLat=4),
-               OpDesc(opClass='SimdFloatSqrt', opLat=9),
-               OpDesc(opClass='FloatAdd', opLat=3),
-               OpDesc(opClass='FloatCmp', opLat=3),
-               OpDesc(opClass='FloatCvt', opLat=3),
-               OpDesc(opClass='FloatDiv', opLat=9, pipelined=False),
-               OpDesc(opClass='FloatSqrt', opLat=33, pipelined=False),
-               OpDesc(opClass='FloatMult', opLat=4),
-               OpDesc(opClass='FloatMultAcc', opLat=4),
-               OpDesc(opClass='FloatMisc', opLat=3) ]
-    count = 1
+               OpDesc(opClass='SimdFloatSqrt', opLat=9) ]
+    count = 2
     fuseCap = 0
     widthCap = 128
     simd = True
-
 
 # Load/Store Units
 class O3_ARM_v7a_Load(FUDesc):
@@ -121,6 +115,9 @@ class O3_ARM_v7a_BP(BiModeBP):
     BTBTagSize = 18
     RASSize = 16
     instShiftAmt = 2
+
+# Pipeline parameters based on the Wang2019 paper
+# https://dl.acm.org/citation.cfm?id=3322229&dl=ACM&coll=DL
 
 class O3_ARM_v7a_3(DerivO3CPU):
     LQEntries = 32

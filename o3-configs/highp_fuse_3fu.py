@@ -55,7 +55,7 @@ class O3_ARM_v7a_FP(FUDesc):
                OpDesc(opClass='FloatMult', opLat=4),
                OpDesc(opClass='FloatMultAcc', opLat=4),
                OpDesc(opClass='FloatMisc', opLat=3) ]
-    count = 4
+    count = 3
     widthCap = 128
     floatp = True
 
@@ -81,8 +81,8 @@ class O3_ARM_v7a_AdvSimd(FUDesc):
                OpDesc(opClass='SimdFloatMult', opLat=4),
                OpDesc(opClass='SimdFloatMultAcc',opLat=4),
                OpDesc(opClass='SimdFloatSqrt', opLat=9) ]
-    count = 4
-    fuseCap = 0
+    count = 3
+    fuseCap = 3
     widthCap = 128
     simd = True
 
@@ -163,7 +163,6 @@ class O3_ARM_v7a_3(DerivO3CPU):
     switched_out = False
     branchPred = O3_ARM_v7a_BP()
 
-# A12 Vortex Cache Sizes: https://en.wikipedia.org/wiki/Apple_A12
 # Instruction Cache
 class O3_ARM_v7a_ICache(Cache):
     tag_latency = 2
@@ -171,7 +170,7 @@ class O3_ARM_v7a_ICache(Cache):
     response_latency = 2
     mshrs = 8
     tgts_per_mshr = 8
-    size = '128kB'
+    size = '32kB'
     assoc = 8
     is_read_only = True
     # Writeback clean lines as well
@@ -184,7 +183,7 @@ class O3_ARM_v7a_DCache(Cache):
     response_latency = 2
     mshrs = 8
     tgts_per_mshr = 8
-    size = '128kB'
+    size = '32kB'
     assoc = 8
     write_buffers = 16
     # Consider the L2 a victim cache also for clean lines
@@ -212,7 +211,7 @@ class O3_ARM_v7aL2(Cache):
     response_latency = 15
     mshrs = 16
     tgts_per_mshr = 8
-    size = '8MB'
+    size = '256kB'
     assoc = 16
     write_buffers = 8
     prefetch_on_access = True
