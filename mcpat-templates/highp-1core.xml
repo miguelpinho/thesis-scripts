@@ -21,9 +21,8 @@
     <!--cache coherence hardware -->
     <param name="homogeneous_ccs" value="0"/>
     <param name="homogeneous_NoCs" value="0"/>
-    <!-- A12 Vortex 7nm  -->
     <!-- nm -->
-    <param name="core_tech_node" value="7"/>
+    <param name="core_tech_node" value="28"/>
     <!-- MHz -->
     <param name="target_core_clockrate" value="2000"/>
     <!-- Kelvin -->
