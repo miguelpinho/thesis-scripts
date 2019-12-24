@@ -43,7 +43,7 @@ def main():
         print('Invalid dir path {}.'.format(args.dir))
         sys.exit()
 
-    files = sorted(dir_root.glob('*/{}'.format(args.stat)))
+    files = sorted(dir_root.glob('**/{}'.format(args.stat)))
 
     df_concat = []
     for f in files:
