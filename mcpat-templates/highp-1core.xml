@@ -26,7 +26,7 @@
     <!-- MHz -->
     <param name="target_core_clockrate" value="2000"/>
     <!-- Kelvin -->
-    <param name="temperature" value="380"/>
+    <param name="temperature" value="340"/>
     <param name="number_cache_levels" value="2"/>
     <!--0: aggressive wire technology; 1: conservative wire technology -->
     <param name="interconnect_projection_type" value="0"/>
