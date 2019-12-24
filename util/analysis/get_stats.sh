@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-find . -name 'stats.txt' | parallel 'awk -f clean_stats.awk {} > {//}/roi_stats.txt'
-find . -name 'roi_stats.txt' > stat_files.txt
+find . -name 'stats.txt' | parallel 'awk -f clean_stats.awk {} > {//}/roi.txt'
+find . -name 'roi.txt' > stat_files.txt
 parallel 'awk -f time.awk {} > {//}/time.csv' :::: stat_files.txt
 parallel 'awk -f stat.awk -v stat="{2}" {1} | csvtool transpose - | csvcut -C samples,mean,stdev,underflows,overflows,min_value,max_value,total > {1//}/{2}.csv' :::: stat_files.txt :::: stat_list.txt
 parallel 'awk -f stat_vector.awk -v stat="{2}" {1} | ./csvpivot.py "fu" | csvcut -C samples,mean,stdev,underflows,overflows,min_value,max_value,total > {1//}/{2}.csv' :::: stat_files.txt :::: stat_vector_list.txt
