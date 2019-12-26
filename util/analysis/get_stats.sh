@@ -15,3 +15,4 @@ parallel './stats_concat.py {1} {2}.csv' :::: folders.txt :::: stat_list.txt sta
 parallel './stats_concat.py {1} {2}.csv' :::: folders.txt ::: 'width_class'
 parallel 'parallel -I [] --dirnamereplace [//] "./GEM5ToMcPAT.py --quiet --out=[//]/mcpat.xml [] [//]/config.json {}/template.xml" :::: {}/stat_files.txt' :::: folders.txt
 parallel '$MCPAT_PATH -infile {//}/mcpat.xml -print_level 5 -opt_for_clk 0 > {//}/power.txt' :::: stat_files.txt
+parallel './mcpat_tocsv.py {//}/power.txt > {//}/power.csv' :::: stat_files.txt
