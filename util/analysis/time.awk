@@ -3,12 +3,15 @@
     # BEGIN rule(s)
 
     BEGIN {
-        print "clk cycles"
+        print "sim seconds,clk cycles"
     }
 
     # Rule(s)
 
+    /sim_seconds/ {
+        printf $2
+    }
     /system.switch_cpus.numCycles/ {
-        print $2
+        print "," $2
     }
 
