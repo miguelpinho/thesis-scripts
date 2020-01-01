@@ -29,6 +29,8 @@
 
 from m5.objects import *
 
+# The low-power Out-of-Order Core is based on Arm Cortex-A57.
+
 # https://static.docs.arm.com/uan0015/b/Cortex_A57_Software_Optimization_Guide_external.pdf
 # Simple ALU Instructions have a latency of 1
 class O3_ARM_v7a_Simple_Int(FUDesc):
@@ -58,28 +60,28 @@ class O3_ARM_v7a_FP(FUDesc):
 
 # SIMD instructions
 class O3_ARM_v7a_AdvSimd(FUDesc):
-    opList = [ OpDesc(opClass='SimdAdd', opLat=3),
-               OpDesc(opClass='SimdAddAcc', opLat=4),
-               OpDesc(opClass='SimdAlu', opLat=3),
-               OpDesc(opClass='SimdCmp', opLat=3),
-               OpDesc(opClass='SimdCvt', opLat=3),
-               OpDesc(opClass='SimdMisc', opLat=3),
-               OpDesc(opClass='SimdMult',opLat=5),
-               OpDesc(opClass='SimdMultAcc',opLat=5),
-               OpDesc(opClass='SimdShift',opLat=3),
-               OpDesc(opClass='SimdShiftAcc', opLat=3),
-               OpDesc(opClass='SimdSqrt', opLat=9),
-               OpDesc(opClass='SimdFloatAdd',opLat=5),
-               OpDesc(opClass='SimdFloatAlu',opLat=5),
-               OpDesc(opClass='SimdFloatCmp', opLat=5),
-               OpDesc(opClass='SimdFloatCvt', opLat=5),
-               OpDesc(opClass='SimdFloatDiv', opLat=7),
-               OpDesc(opClass='SimdFloatMisc', opLat=3),
-               OpDesc(opClass='SimdFloatMult', opLat=5),
-               OpDesc(opClass='SimdFloatMultAcc',opLat=5),
-               OpDesc(opClass='SimdFloatSqrt', opLat=9) ]
+    opList = [ OpDesc(opClass='SimdAdd', opLat=4),
+               OpDesc(opClass='SimdAddAcc', opLat=5),
+               OpDesc(opClass='SimdAlu', opLat=4),
+               OpDesc(opClass='SimdCmp', opLat=4),
+               OpDesc(opClass='SimdCvt', opLat=4),
+               OpDesc(opClass='SimdMisc', opLat=4),
+               OpDesc(opClass='SimdMult',opLat=6),
+               OpDesc(opClass='SimdMultAcc',opLat=6),
+               OpDesc(opClass='SimdShift',opLat=4),
+               OpDesc(opClass='SimdShiftAcc', opLat=4),
+               OpDesc(opClass='SimdSqrt', opLat=10),
+               OpDesc(opClass='SimdFloatAdd',opLat=6),
+               OpDesc(opClass='SimdFloatAlu',opLat=6),
+               OpDesc(opClass='SimdFloatCmp', opLat=6),
+               OpDesc(opClass='SimdFloatCvt', opLat=6),
+               OpDesc(opClass='SimdFloatDiv', opLat=8),
+               OpDesc(opClass='SimdFloatMisc', opLat=4),
+               OpDesc(opClass='SimdFloatMult', opLat=6),
+               OpDesc(opClass='SimdFloatMultAcc',opLat=6),
+               OpDesc(opClass='SimdFloatSqrt', opLat=10) ]
     count = 2
-    fuseCap = 0
+    fuseCap = 3
     widthCap = 128
     simd = True
 

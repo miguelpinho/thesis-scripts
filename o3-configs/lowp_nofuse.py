@@ -29,6 +29,8 @@
 
 from m5.objects import *
 
+# The low-power Out-of-Order Core is based on Arm Cortex-A57.
+
 # https://static.docs.arm.com/uan0015/b/Cortex_A57_Software_Optimization_Guide_external.pdf
 # Simple ALU Instructions have a latency of 1
 class O3_ARM_v7a_Simple_Int(FUDesc):
@@ -79,7 +81,7 @@ class O3_ARM_v7a_AdvSimd(FUDesc):
                OpDesc(opClass='SimdFloatMultAcc',opLat=5),
                OpDesc(opClass='SimdFloatSqrt', opLat=9) ]
     count = 2
-    fuseCap = 3
+    fuseCap = 0
     widthCap = 128
     simd = True
 
