@@ -45,3 +45,9 @@ tasks, namely:
 -   Some PARSEC-3.0 benchmarks;
 -   At least two SPEC2006 (probably several more);
 -   Custom thesis kernels and mini-apps.
+
+## TODO
+
+-   [ ] Refactor get-stats script;
+-   [ ] Handle dependencies better: requirements.txt, env...;
+-   [ ] Update python2 scripts to python3.
