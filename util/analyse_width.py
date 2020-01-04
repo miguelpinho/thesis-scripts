@@ -51,7 +51,18 @@ def read_data(in_file=None):
     return np.loadtxt(in_file, dtype=int)
 
 
-def save_width_hist(data, file, bits=64, cumulative=False, title=None):
+def save_hist_table(data, file, bits=64, cumulative=False, title=None):
+    """Saves an integer width values array as a .csv histogram table."""
+    counts = np.bincount(data, minlength=bits+1)
+
+    hist = counts / counts.sum()
+    if cumulative:
+        hist = np.cumsum(hist)
+    idx = np.arange(0, counts.size)
+
+    np.savetxt(file, np.asarray([idx, hist]), delimiter=',', fmt='%.3f')
+
+def save_hist_figure(data, file, bits=64, cumulative=False, title=None):
     """Saves an integer width values array as a .pdf histogram figure."""
     plt.hist(data, bins=bits+1, range=(0, bits+1),
              density=True, cumulative=cumulative, facecolor='blue')
@@ -107,10 +118,22 @@ def get_args():
         help='''output width histogram as .pdf figure file'''
     )
     parser.add_argument(
+        '--hist-csv',
+        action='store_true',
+        default=False,
+        help='''output width histogram as .csv file'''
+    )
+    parser.add_argument(
         '--cumulative',
         action='store_true',
         default=False,
         help='''output cumulative width histogram as .pdf figure file'''
+    )
+    parser.add_argument(
+        '--cumulative-csv',
+        action='store_true',
+        default=False,
+        help='''output cumulative width histogram as .csv file'''
     )
 
     return parser.parse_args()
@@ -147,18 +170,28 @@ def main():
         csv_path = Path(out_folder, in_stem + tag).with_suffix('.csv')
         save_data(width, out_file=str(csv_path))
 
-    if args.hist == True:
+    if args.hist:
         hist_path = Path(out_folder, in_stem + tag +
                          "_hist").with_suffix('.pdf')
-        save_width_hist(width, hist_path, bits=args.bits)
+        save_hist_figure(width, hist_path, bits=args.bits)
 
-    if args.cumulative == True:
+    if args.hist_csv:
+        hist_path = Path(out_folder, in_stem + tag +
+                         "_hist").with_suffix('.csv')
+        save_hist_table(width, hist_path, bits=args.bits)
+
+    if args.cumulative:
         cumulative_path = Path(out_folder, in_stem + tag +
                                "_cumulative").with_suffix('.pdf')
-        save_width_hist(width, cumulative_path,
-                        bits=args.bits, cumulative=True,
-                        title='Cumulative Bit-width Histogram')
+        save_hist_figure(width, cumulative_path,
+                         bits=args.bits, cumulative=True,
+                         title='Cumulative Bit-width Histogram')
 
+    if args.cumulative_csv:
+        cumulative_path = Path(out_folder, in_stem + tag +
+                               "_cumulative").with_suffix('.csv')
+        save_hist_table(width, cumulative_path, bits=args.bits,
+                        cumulative=True)
 
 if __name__ == "__main__":
     main()
