@@ -9,9 +9,12 @@ mv $GEM5_PATH/configs/common/cores/arm/O3_ARM_v7a.py \
 	$GEM5_PATH/configs/common/cores/arm/O3_ARM_v7a.py.backup
 
 declare -A config
-config[LP_NF]="lowp_nofuse.py"
-config[LP_F]="lowp_fuse.py"
-config[LP_FP]="lowp_fusepenalty.py"
+config[LP2_NF]="lowp_nofuse_2fu.py"
+config[LP2_F]="lowp_fuse_2fu.py"
+config[LP2_FP]="lowp_fusepenalty_2fu.py"
+config[LP1_NF]="lowp_nofuse_1fu.py"
+config[LP1_F]="lowp_fuse_1fu.py"
+config[LP1_FP]="lowp_fusepenalty_1fu.py"
 config[HP3_NF]="highp_nofuse_3fu.py"
 config[HP2_NF]="highp_nofuse_2fu.py"
 config[HP1_NF]="highp_nofuse_1fu.py"
