@@ -6,5 +6,5 @@ cd $KERNEL_DIR
 pwd                       
 ls                        
                           
-./build/img_yuv444 ./data/image5.ppm                     
+./build/img_yuv444 ./data/image5.ppm 10                     
 m5 exit                     

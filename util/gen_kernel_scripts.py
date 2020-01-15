@@ -98,6 +98,8 @@ data_img = [
     "image5.ppm"
 ]
 
+size_img = 10
+
 
 def get_args():
     """Return parsed args for gen_kernel_scripts util."""
@@ -165,7 +167,7 @@ def main():
             img_benchmarks.append(bench)
 
             prg = './build/{}'.format(kernel)
-            prg_args = ['./data/{}'.format(img)]
+            prg_args = ['./data/{}'.format(img), str(size_img)]
 
             print_script(path, prg, prg_args)
     img_benchmarks.sort()
