@@ -44,9 +44,9 @@ workload_sizes = {
     # 'tiny': ['1098304', '1024 1024', '256 256 256'],
     # 'small': ['4194304', '2048 2048', '512 512 512'],
     'normal': {
-        1:{'shape':'65536', 'iter':'400'},
-        2:{'shape':'2048 1024', 'iter':'200'},
-        3:{'shape':'1048 524 524', 'iter':'5'}
+        1:{'iter':'400', 'shape':['65536']},
+        2:{'iter':'200', 'shape':['2048 1024', '1024 2048', '4096 512', '512 4096', '256 8192']},
+        3:{'iter':'5'  , 'shape':['1048 524 524', '524 1048 524', '524 524 1048', '1048 256 1048', '1048 1048 256']}
     },
     # 'large': ['67108864', '8192 8192', '2048 2048 2048']
 }
@@ -147,7 +147,7 @@ def main():
 
                     prg = './build/{}'.format(blas)
                     prg_args = []
-                    prg_args.append(arguments[level]['shape'])
+                    prg_args.append(arguments[level]['shape'][idx % len(arguments[level]['shape'])])
                     prg_args.append("./data/{}".format(data_file))
                     prg_args.append(arguments[level]['iter'])
 
