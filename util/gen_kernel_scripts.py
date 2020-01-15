@@ -50,18 +50,25 @@ workload_sizes = {
 # integer data distributions
 data_dist = {
     '8bit': [
-        "normal_mu0_0_s45_0_n17000000_seed120197.csv",
-        "normal_mu0_0_s45_0_n17000000_seed25981.csv",
-        "normal_mu0_0_s45_0_n17000000_seed434121.csv",
-        "normal_mu0_0_s45_0_n17000000_seed874084.csv",
-        "normal_mu0_0_s45_0_n17000000_seed911960.csv"
+        "normal_mu0_0_s65_0_n17000000_seed112444.csv",
+        "normal_mu0_0_s65_0_n17000000_seed358739.csv",
+        "normal_mu0_0_s65_0_n17000000_seed485805.csv",
+        "normal_mu0_0_s65_0_n17000000_seed611651.csv",
+        "normal_mu0_0_s65_0_n17000000_seed803661.csv",
+    ],
+    '12bit': [
+        "lognormal_mu4_0_s2_2_n17000000_seed125529.csv",
+        "lognormal_mu4_0_s2_2_n17000000_seed161353.csv",
+        "lognormal_mu4_0_s2_2_n17000000_seed395922.csv",
+        "lognormal_mu4_0_s2_2_n17000000_seed50444.csv",
+        "lognormal_mu4_0_s2_2_n17000000_seed853852.csv",
     ],
     '16bit': [
-        "lognormal_mu5_0_s3_5_n17000000_seed1750.csv",
-        "lognormal_mu5_0_s3_5_n17000000_seed270955.csv",
-        "lognormal_mu5_0_s3_5_n17000000_seed357477.csv",
-        "lognormal_mu5_0_s3_5_n17000000_seed512067.csv",
-        "lognormal_mu5_0_s3_5_n17000000_seed568863.csv"
+        "lognormal_mu5_0_s3_3_n17000000_seed283146.csv",
+        "lognormal_mu5_0_s3_3_n17000000_seed289906.csv",
+        "lognormal_mu5_0_s3_3_n17000000_seed339531.csv",
+        "lognormal_mu5_0_s3_3_n17000000_seed534724.csv",
+        "lognormal_mu5_0_s3_3_n17000000_seed950812.csv",
     ]
 }
 
