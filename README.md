@@ -51,3 +51,4 @@ tasks, namely:
 -   [ ] Refactor get-stats script;
 -   [ ] Handle dependencies better: requirements.txt, env...;
 -   [ ] Update python2 scripts to python3.
+-   [ ] Add more benchmark sizes (`tiny`, `small`, `large`)
