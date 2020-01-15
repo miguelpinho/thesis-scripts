@@ -43,7 +43,11 @@ algebra_kernels = [
 workload_sizes = {
     # 'tiny': ['1098304', '1024 1024', '256 256 256'],
     # 'small': ['4194304', '2048 2048', '512 512 512'],
-    'normal': [['65536', '400'], ['2048 1024', '200'], ['1048 524 524', '5']],
+    'normal': {
+        1:{'shape':'65536', 'iter':'400'},
+        2:{'shape':'2048 1024', 'iter':'200'},
+        3:{'shape':'1048 524 524', 'iter':'5'}
+    },
     # 'large': ['67108864', '8192 8192', '2048 2048 2048']
 }
 
@@ -86,13 +90,13 @@ image_kernels = [
 ]
 
 # ppm image files
-data_img = {
+data_img = [
     "image1.ppm",
     "image2.ppm",
     "image3.ppm",
     "image4.ppm",
     "image5.ppm"
-}
+]
 
 
 def get_args():
@@ -126,8 +130,8 @@ def main():
         sys.exit()
 
     # generate algebra scripts
-    for tag, size in workload_sizes.items():
-        benchmarks = {'1': [], '2': [], '3': []}
+    for tag, arguments in workload_sizes.items():
+        benchmarks = {1:[], 2:[], 3:[]}
 
         for kernel in algebra_kernels:
             for d, data in data_dist.items():
@@ -137,13 +141,13 @@ def main():
                 for idx, data_file in enumerate(data):
                     bench = '{}_{}_{}_{}.sh'.format(blas, tag, d, idx)
                     path = outdir / bench
-                    benchmarks[str(level)].append(bench)
+                    benchmarks[level].append(bench)
 
                     prg = './build/{}'.format(blas)
                     prg_args = []
-                    prg_args.append(size[level-1][0])
+                    prg_args.append(arguments[level]['shape'])
                     prg_args.append("./data/{}".format(data_file))
-                    prg_args.append(size[level-1][1])
+                    prg_args.append(arguments[level]['iter'])
 
                     print_script(path, prg, prg_args)
 
