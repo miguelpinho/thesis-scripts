@@ -6,5 +6,5 @@ cd $KERNEL_DIR
 pwd                       
 ls                        
                           
-./build/img_hist ./data/image3.ppm 10                     
+./build/img_hist ./data/image3.ppm 15                     
 m5 exit                     

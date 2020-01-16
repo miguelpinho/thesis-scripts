@@ -77,17 +77,17 @@ data_dist = {
 }
 
 # image kernels
-image_kernels = [
-    "conv",
-    "img_hist",
-    "img_integral",
-    "img_erode",
-    "img_canny",
-    "img_cartoon",
-    "img_yuv444",
-    "img_median",
-    "img_scale"
-]
+image_kernels = {
+    "conv":10,
+    "img_hist":15,
+    "img_integral":30,
+    "img_erode":75,
+    "img_canny":5,
+    "img_cartoon":10,
+    "img_yuv444":10,
+    "img_median":50,
+    "img_scale":5
+}
 
 # ppm image files
 data_img = [
@@ -97,8 +97,6 @@ data_img = [
     "image4.ppm",
     "image5.ppm"
 ]
-
-size_img = 10
 
 
 def get_args():
@@ -160,14 +158,14 @@ def main():
 
     # generate image scripts
     img_benchmarks = []
-    for kernel in image_kernels:
+    for kernel, iterations in image_kernels.items():
         for img in data_img:
             bench = '{}_{}.sh'.format(kernel, img.split(sep='.')[0])
             path = outdir / bench
             img_benchmarks.append(bench)
 
             prg = './build/{}'.format(kernel)
-            prg_args = ['./data/{}'.format(img), str(size_img)]
+            prg_args = ['./data/{}'.format(img), str(iterations)]
 
             print_script(path, prg, prg_args)
     img_benchmarks.sort()

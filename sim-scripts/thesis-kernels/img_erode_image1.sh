@@ -6,5 +6,5 @@ cd $KERNEL_DIR
 pwd                       
 ls                        
                           
-./build/img_erode ./data/image1.ppm 10                     
+./build/img_erode ./data/image1.ppm 75                     
 m5 exit                     
