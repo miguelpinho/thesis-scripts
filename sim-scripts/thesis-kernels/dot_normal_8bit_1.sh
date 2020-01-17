@@ -6,5 +6,5 @@ cd $KERNEL_DIR
 pwd                       
 ls                        
                           
-./build/dot 65536 ./data/normal_mu0_0_s45_0_n17000000_seed25981.csv 400                     
+./build/dot 65536 ./data/normal_mu0_0_s65_0_n17000000_seed358739.csv 400                     
 m5 exit                     
