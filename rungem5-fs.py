@@ -103,6 +103,12 @@ def get_arguments():
         parallel. Overrides environment variable''',
     )
     parser.add_argument(
+        '--nodes-file',
+        default=argparse.SUPPRESS,
+        help='''for remote parallel processing, provides the file with the
+        ssh hosts''',
+    )
+    parser.add_argument(
         '-C',
         '--cpu-cores',
         type=int,
@@ -473,26 +479,30 @@ def run_fs(args, paths, bin_gem5, args_gem5, config_script, args_config):
     """Run gem5 with the given arguments."""
     run_args = [str(bin_gem5)] + args_gem5 + [str(config_script)] + args_config
 
-    if args.action == 'benchmark':
-        run_args = ['parallel', '--bar',
-                    '--max-procs={}'.format(get_sim_jobs(args))] + run_args + ['::::']
+    if args.action in ['benchmark', 'scriptset']:
+        parallel_options = ['parallel', '--bar']
+        if 'nodes_file' in args:
+            nodes_file = Path(args.nodes_file)
+            if not nodes_file.is_file():
+                print('Invalid nodes file: {}.'.format(args.nodes_file))
+            parallel_options.append('--sshloginfile={}'.format(str(nodes_file)))
+        else:
+            parallel_options.append('--max-procs={}'.format(get_sim_jobs(args)))
 
-        bench_txt = paths['BENCH_DIR'] / (args.workload + '.txt')
-        if not bench_txt.is_file():
-            print('Invalid benchmark list file: {}.'.format(bench_txt))
-            sys.exit()
+        if args.action == 'benchmark':
+            bench_txt = paths['BENCH_DIR'] / (args.workload + '.txt')
+            if not bench_txt.is_file():
+                print('Invalid benchmark list file: {}.'.format(bench_txt))
+                sys.exit()
+            parallel_args = ['::::', str(bench_txt)]
+        elif args.action == 'scriptset':
+            parallel_args = ['::::', str(paths['SCRIPTS_FILE']), ':::']
+            if args.runs < 1:
+                print('Invalid number of runs: {}.'.format(args.runs))
+                sys.exit()
+            parallel_args.extend([str(n) for n in range(args.runs)])
 
-        run_args.append(str(bench_txt))
-    elif args.action == 'scriptset':
-        if args.runs < 1:
-            print('Invalid number of runs: {}.'.format(args.runs))
-            sys.exit()
-
-        run_args = ['parallel', '--bar',
-                    '--max-procs={}'.format(get_sim_jobs(args))] + run_args + ['::::']
-        run_args.append(str(paths['SCRIPTS_FILE']))
-        run_args.append(':::')
-        run_args.extend([str(n) for n in range(args.runs)])
+        run_args = parallel_options + run_args + parallel_args
 
     print('Running command:\n{}'.format(' '.join(run_args)))
 
