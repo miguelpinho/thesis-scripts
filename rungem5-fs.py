@@ -218,7 +218,7 @@ def load_env(args):
         env_path = Path(args.env_file)
         if env_path.exists():
             try:
-                load_dotenv(dotenv_path=env_path, override=True)
+                load_dotenv(dotenv_path=str(env_path), override=True)
             except IOError:
                 print("Could not open env_file file. Ignoring.")
             else:
