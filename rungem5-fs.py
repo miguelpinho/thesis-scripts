@@ -433,10 +433,10 @@ def get_config_args(args, paths):
             sys.exit()
         args_config.append("--script={}".format(script))
     elif args.action == 'benchmark':
-        args_config.append("--script={}/".format(paths['BENCH_DIR']) + r'{1}')
+        args_config.append("--script={}/".format(paths['BENCH_DIR'].absolute()) + r'{1}')
     elif args.action == 'scriptset':
         args_config.append(
-            "--script={}/".format(paths['SCRIPTS_DIR']) + r'{1}')
+            "--script={}/".format(paths['SCRIPTS_DIR'].absolute()) + r'{1}')
 
     if args.action in ['restart', 'script', 'benchmark', 'scriptset']:
         if not args.fast_cpu:
