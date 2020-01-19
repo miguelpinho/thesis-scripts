@@ -1,1 +1,0 @@
-./thesis-kernels/img_median_image1.sh
