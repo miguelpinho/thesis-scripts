@@ -486,7 +486,7 @@ def run_fs(args, paths, bin_gem5, args_gem5, config_script, args_config):
             if not nodes_file.is_file():
                 print('Invalid nodes file: {}.'.format(args.nodes_file))
             parallel_options.extend(['--sshloginfile={}'.format(str(nodes_file)),
-                                     '--sshdelay=0.2',
+                                     '--sshdelay=0.2', '--retries=1',
                                      '--env=M5_PATH'])
         else:
             parallel_options.append('--max-procs={}'.format(get_sim_jobs(args)))
