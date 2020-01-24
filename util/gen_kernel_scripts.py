@@ -84,7 +84,7 @@ image_kernels = {
     "img_erode":75,
     "img_canny":5,
     "img_cartoon":10,
-    "img_yuv444":10,
+    "img_yuv444":150,
     "img_median":50,
     "img_scale":5
 }

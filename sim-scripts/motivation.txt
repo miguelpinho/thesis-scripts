@@ -1,0 +1,6 @@
+./splash2/radix_simsmall_1.sh
+./splash2/fmm_simsmall_1.sh
+./parsec3/canneal_simsmall_1.sh
+./parsec3/freqmine_simsmall_1.sh
+./spec2006/hmmer-small.sh
+./spec2006/libquantum-small.sh
