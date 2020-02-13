@@ -48,7 +48,7 @@ tasks, namely:
 
 ## TODO
 
--   [ ] Refactor get-stats script;
+-   [ ] Refactor get-stats script to a data pipeline/build system;
 -   [ ] Handle dependencies better: requirements.txt, env...;
 -   [ ] Update python2 scripts to python3.
 -   [ ] Add more benchmark sizes (`tiny`, `small`, `large`)

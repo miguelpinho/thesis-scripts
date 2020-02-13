@@ -6,7 +6,7 @@ cd $SPEC_DIR
 pwd
 ls
 
-m5 resetstats
+m5 dumpresetstats
 ./benchspec/CPU2006/456.hmmer/exe/hmmer_base.gcc83-aarch64 \
     ./benchspec/CPU2006/456.hmmer/data/test/input/bombesin.hmm
 m5 dumpresetstats

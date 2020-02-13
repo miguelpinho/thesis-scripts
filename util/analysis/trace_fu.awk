@@ -9,7 +9,7 @@
 
     # Rule(s)
 
-    {
+    /TotalSimdFU/ {
         print $1 "," $5 "," $8 "," $14 "," $11
     }
 
