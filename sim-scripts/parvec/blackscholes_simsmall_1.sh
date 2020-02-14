@@ -6,5 +6,5 @@ cd $PARSEC_DIR
 pwd
 
 source ./env.sh
-parsecmgmt -a run -p parsec.simd.fluidanimate -c gcc-hooks -i simsmall -n 1
+parsecmgmt -a run -p parsec.simd.blackscholes -c gcc-hooks -i simsmall -n 1
 m5 exit
