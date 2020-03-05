@@ -10,8 +10,9 @@ find $1 -name 'roi.txt' | parallel --bar "awk -f $DIR/stat.awk -v stat='widthCla
 find $1 -name 'roi.txt' | parallel --bar "awk -f $DIR/stat.awk -v stat='FU_type_0' {1} | csvtool transpose - > {1//}/iq_fu_class.csv"
 find $1 -name 'roi.txt' | parallel --bar "awk -f $DIR/stat_vector.awk -v stat='{2}' {1} | $DIR/csvpivot.py 'fu' > {1//}/{2}.csv" :::: - ::: simd_fu_issue_partial simd_fu_width_partial
 find $1 -name 'roi.txt' | parallel --bar "awk -f $DIR/stat_by_class.awk -v stat='{2}' {1} | $DIR/csvpivot.py 'class' > {1//}/{2}.csv" :::: - ::: statVectorInstTotalWidthByClass
+find $1 -name 'roi.txt' | parallel --bar "awk -f $DIR/width.awk {} > {//}/width.csv"
 find $1 -name 'roi.txt' | parallel --bar "$DIR/../mcpat/GEM5ToMcPAT.py --quiet --out={//}/mcpat.xml {} {//}/config.json {//}/../../template.xml"
-if [[ $MCPAT ]]; then 
+if [[ $MCPAT ]]; then
     find $1 -name 'mcpat.xml' | parallel --bar "$MCPAT -infile {} -print_level 5 -opt_for_clk 0 > {//}/power.txt"
 else
     echo "No path for MCPAT provided."
