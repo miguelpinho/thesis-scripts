@@ -74,7 +74,6 @@ class O3_ARM_v7a_AdvSimd(FUDesc):
                OpDesc(opClass='SimdMultAcc',opLat=5),
                OpDesc(opClass='SimdShift',opLat=3),
                OpDesc(opClass='SimdShiftAcc', opLat=3),
-               OpDesc(opClass='SimdDiv', opLat=9, pipelined=False),
                OpDesc(opClass='SimdSqrt', opLat=9),
                OpDesc(opClass='SimdFloatAdd',opLat=5),
                OpDesc(opClass='SimdFloatAlu',opLat=5),
@@ -84,12 +83,7 @@ class O3_ARM_v7a_AdvSimd(FUDesc):
                OpDesc(opClass='SimdFloatMisc', opLat=3),
                OpDesc(opClass='SimdFloatMult', opLat=3),
                OpDesc(opClass='SimdFloatMultAcc',opLat=5),
-               OpDesc(opClass='SimdFloatSqrt', opLat=9),
-               OpDesc(opClass='SimdReduceAdd'),
-               OpDesc(opClass='SimdReduceAlu'),
-               OpDesc(opClass='SimdReduceCmp'),
-               OpDesc(opClass='SimdFloatReduceAdd'),
-               OpDesc(opClass='SimdFloatReduceCmp') ]
+               OpDesc(opClass='SimdFloatSqrt', opLat=9) ]
     count = 1
     fuseCap = 3
     widthCap = 128
