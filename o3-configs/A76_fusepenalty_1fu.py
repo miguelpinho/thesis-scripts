@@ -103,18 +103,12 @@ class O3_ARM_v7a_Store(FUDesc):
     count = 1
     widthCap = 128
 
-class O3_ARM_v7a_PredALU(FUDesc):
-    opList = [ OpDesc(opClass='SimdPredAlu') ]
-    count = 1
-    widthCap = 128
-
 # Functional Units for this CPU
-class ARM_Cortex_A76_FUP(FUPool):
+class O3_ARM_v7a_FUP(FUPool):
     FUList = [O3_ARM_v7a_Simple_Int(),
               O3_ARM_v7a_Complex_Int(),
               O3_ARM_v7a_Load(),
               O3_ARM_v7a_Store(),
-              O3_ARM_v7a_PredALU(),
               O3_ARM_v7a_FP(),
               O3_ARM_v7a_AdvSimd()]
 
@@ -156,7 +150,7 @@ class O3_ARM_v7a_3(DerivO3CPU):
     dispatchWidth = 8
     issueWidth = 8
     wbWidth = 8
-    fuPool = ARM_Cortex_A76_FUP()
+    fuPool = O3_ARM_v7a_FUP()
     iewToCommitDelay = 1
     renameToROBDelay = 1
     commitWidth = 8
@@ -172,9 +166,7 @@ class O3_ARM_v7a_3(DerivO3CPU):
     numROBEntries = 192
 
     switched_out = False
-    # branchPred = ARM_Cortex_A76_BP()
-    branchPred = Param.BranchPredictor(TournamentBP(
-        numThreads = Parent.numThreads), "Branch Predictor")
+    branchPred = O3_ARM_v7a_BP()
 
 # Instruction Cache
 class O3_ARM_v7a_ICache(Cache):
