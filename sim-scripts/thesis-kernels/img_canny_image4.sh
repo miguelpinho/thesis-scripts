@@ -6,5 +6,5 @@ cd $KERNEL_DIR
 pwd                       
 ls                        
                           
-./build/img_canny ./data/image4.ppm                     
+./build/img_canny ./data/image4.ppm 5                     
 m5 exit                     

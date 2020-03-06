@@ -6,5 +6,5 @@ cd $KERNEL_DIR
 pwd                       
 ls                        
                           
-./build/conv ./data/image1.ppm                     
+./build/conv ./data/image1.ppm 10                     
 m5 exit                     

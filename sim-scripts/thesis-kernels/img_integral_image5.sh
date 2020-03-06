@@ -6,5 +6,5 @@ cd $KERNEL_DIR
 pwd                       
 ls                        
                           
-./build/img_integral ./data/image5.ppm                     
+./build/img_integral ./data/image5.ppm 30                     
 m5 exit                     

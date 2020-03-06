@@ -3,6 +3,11 @@ gemm_normal_8bit_1.sh
 gemm_normal_8bit_2.sh
 gemm_normal_8bit_3.sh
 gemm_normal_8bit_4.sh
+gemm_normal_12bit_0.sh
+gemm_normal_12bit_1.sh
+gemm_normal_12bit_2.sh
+gemm_normal_12bit_3.sh
+gemm_normal_12bit_4.sh
 gemm_normal_16bit_0.sh
 gemm_normal_16bit_1.sh
 gemm_normal_16bit_2.sh

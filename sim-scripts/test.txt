@@ -1,3 +1,0 @@
-./thesis-kernels/img_cvt_test.sh
-./thesis-kernels/img_hist_test.sh
-./thesis-kernels/img_integral_test.sh

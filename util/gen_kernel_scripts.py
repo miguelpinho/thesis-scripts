@@ -43,49 +43,60 @@ algebra_kernels = [
 workload_sizes = {
     # 'tiny': ['1098304', '1024 1024', '256 256 256'],
     # 'small': ['4194304', '2048 2048', '512 512 512'],
-    'normal': [['65536', '400'], ['2048 1024', '200'], ['1048 524 524', '5']],
+    'normal': {
+        1:{'iter':'400', 'shape':['65536']},
+        2:{'iter':'200', 'shape':['2048 1024', '1024 2048', '4096 512', '512 4096', '256 8192']},
+        3:{'iter':'5'  , 'shape':['1048 524 524', '524 1048 524', '524 524 1048', '1048 256 1048', '1048 1048 256']}
+    },
     # 'large': ['67108864', '8192 8192', '2048 2048 2048']
 }
 
 # integer data distributions
 data_dist = {
     '8bit': [
-        "normal_mu0_0_s45_0_n17000000_seed120197.csv",
-        "normal_mu0_0_s45_0_n17000000_seed25981.csv",
-        "normal_mu0_0_s45_0_n17000000_seed434121.csv",
-        "normal_mu0_0_s45_0_n17000000_seed874084.csv",
-        "normal_mu0_0_s45_0_n17000000_seed911960.csv"
+        "normal_mu0_0_s65_0_n17000000_seed112444.csv",
+        "normal_mu0_0_s65_0_n17000000_seed358739.csv",
+        "normal_mu0_0_s65_0_n17000000_seed485805.csv",
+        "normal_mu0_0_s65_0_n17000000_seed611651.csv",
+        "normal_mu0_0_s65_0_n17000000_seed803661.csv",
+    ],
+    '12bit': [
+        "lognormal_mu4_0_s2_2_n17000000_seed125529.csv",
+        "lognormal_mu4_0_s2_2_n17000000_seed161353.csv",
+        "lognormal_mu4_0_s2_2_n17000000_seed395922.csv",
+        "lognormal_mu4_0_s2_2_n17000000_seed50444.csv",
+        "lognormal_mu4_0_s2_2_n17000000_seed853852.csv",
     ],
     '16bit': [
-        "lognormal_mu5_0_s3_5_n17000000_seed1750.csv",
-        "lognormal_mu5_0_s3_5_n17000000_seed270955.csv",
-        "lognormal_mu5_0_s3_5_n17000000_seed357477.csv",
-        "lognormal_mu5_0_s3_5_n17000000_seed512067.csv",
-        "lognormal_mu5_0_s3_5_n17000000_seed568863.csv"
+        "lognormal_mu5_0_s3_3_n17000000_seed283146.csv",
+        "lognormal_mu5_0_s3_3_n17000000_seed289906.csv",
+        "lognormal_mu5_0_s3_3_n17000000_seed339531.csv",
+        "lognormal_mu5_0_s3_3_n17000000_seed534724.csv",
+        "lognormal_mu5_0_s3_3_n17000000_seed950812.csv",
     ]
 }
 
 # image kernels
-image_kernels = [
-    "conv",
-    "img_hist",
-    "img_integral",
-    "img_erode",
-    "img_canny",
-    "img_cartoon",
-    "img_yuv444",
-    "img_median",
-    "img_scale"
-]
+image_kernels = {
+    "conv":10,
+    "img_hist":15,
+    "img_integral":30,
+    "img_erode":75,
+    "img_canny":5,
+    "img_cartoon":10,
+    "img_yuv444":150,
+    "img_median":50,
+    "img_scale":5
+}
 
 # ppm image files
-data_img = {
+data_img = [
     "image1.ppm",
     "image2.ppm",
     "image3.ppm",
     "image4.ppm",
     "image5.ppm"
-}
+]
 
 
 def get_args():
@@ -119,8 +130,8 @@ def main():
         sys.exit()
 
     # generate algebra scripts
-    for tag, size in workload_sizes.items():
-        benchmarks = {'1': [], '2': [], '3': []}
+    for tag, arguments in workload_sizes.items():
+        benchmarks = {1:[], 2:[], 3:[]}
 
         for kernel in algebra_kernels:
             for d, data in data_dist.items():
@@ -130,13 +141,13 @@ def main():
                 for idx, data_file in enumerate(data):
                     bench = '{}_{}_{}_{}.sh'.format(blas, tag, d, idx)
                     path = outdir / bench
-                    benchmarks[str(level)].append(bench)
+                    benchmarks[level].append(bench)
 
                     prg = './build/{}'.format(blas)
                     prg_args = []
-                    prg_args.append(size[level-1][0])
+                    prg_args.append(arguments[level]['shape'][idx % len(arguments[level]['shape'])])
                     prg_args.append("./data/{}".format(data_file))
-                    prg_args.append(size[level-1][1])
+                    prg_args.append(arguments[level]['iter'])
 
                     print_script(path, prg, prg_args)
 
@@ -147,14 +158,14 @@ def main():
 
     # generate image scripts
     img_benchmarks = []
-    for kernel in image_kernels:
+    for kernel, iterations in image_kernels.items():
         for img in data_img:
             bench = '{}_{}.sh'.format(kernel, img.split(sep='.')[0])
             path = outdir / bench
             img_benchmarks.append(bench)
 
             prg = './build/{}'.format(kernel)
-            prg_args = ['./data/{}'.format(img)]
+            prg_args = ['./data/{}'.format(img), str(iterations)]
 
             print_script(path, prg, prg_args)
     img_benchmarks.sort()

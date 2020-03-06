@@ -103,6 +103,12 @@ def get_arguments():
         parallel. Overrides environment variable''',
     )
     parser.add_argument(
+        '--nodes-file',
+        default=argparse.SUPPRESS,
+        help='''for remote parallel processing, provides the file with the
+        ssh hosts''',
+    )
+    parser.add_argument(
         '-C',
         '--cpu-cores',
         type=int,
@@ -212,7 +218,7 @@ def load_env(args):
         env_path = Path(args.env_file)
         if env_path.exists():
             try:
-                load_dotenv(dotenv_path=env_path, override=True)
+                load_dotenv(dotenv_path=str(env_path), override=True)
             except IOError:
                 print("Could not open env_file file. Ignoring.")
             else:
@@ -427,10 +433,10 @@ def get_config_args(args, paths):
             sys.exit()
         args_config.append("--script={}".format(script))
     elif args.action == 'benchmark':
-        args_config.append("--script={}/".format(paths['BENCH_DIR']) + r'{1}')
+        args_config.append("--script={}/".format(paths['BENCH_DIR'].absolute()) + r'{1}')
     elif args.action == 'scriptset':
         args_config.append(
-            "--script={}/".format(paths['SCRIPTS_DIR']) + r'{1}')
+            "--script={}/".format(paths['SCRIPTS_DIR'].absolute()) + r'{1}')
 
     if args.action in ['restart', 'script', 'benchmark', 'scriptset']:
         if not args.fast_cpu:
@@ -473,26 +479,32 @@ def run_fs(args, paths, bin_gem5, args_gem5, config_script, args_config):
     """Run gem5 with the given arguments."""
     run_args = [str(bin_gem5)] + args_gem5 + [str(config_script)] + args_config
 
-    if args.action == 'benchmark':
-        run_args = ['parallel', '--bar',
-                    '--max-procs={}'.format(get_sim_jobs(args))] + run_args + ['::::']
+    if args.action in ['benchmark', 'scriptset']:
+        parallel_options = ['parallel', '--bar']
+        if 'nodes_file' in args:
+            nodes_file = Path(args.nodes_file)
+            if not nodes_file.is_file():
+                print('Invalid nodes file: {}.'.format(args.nodes_file))
+            parallel_options.extend(['--sshloginfile={}'.format(str(nodes_file)),
+                                     '--sshdelay=0.2', '--retries=1',
+                                     '--env=M5_PATH'])
+        else:
+            parallel_options.append('--max-procs={}'.format(get_sim_jobs(args)))
 
-        bench_txt = paths['BENCH_DIR'] / (args.workload + '.txt')
-        if not bench_txt.is_file():
-            print('Invalid benchmark list file: {}.'.format(bench_txt))
-            sys.exit()
+        if args.action == 'benchmark':
+            bench_txt = paths['BENCH_DIR'] / (args.workload + '.txt')
+            if not bench_txt.is_file():
+                print('Invalid benchmark list file: {}.'.format(bench_txt))
+                sys.exit()
+            parallel_args = ['::::', str(bench_txt)]
+        elif args.action == 'scriptset':
+            parallel_args = ['::::', str(paths['SCRIPTS_FILE']), ':::']
+            if args.runs < 1:
+                print('Invalid number of runs: {}.'.format(args.runs))
+                sys.exit()
+            parallel_args.extend([str(n) for n in range(args.runs)])
 
-        run_args.append(str(bench_txt))
-    elif args.action == 'scriptset':
-        if args.runs < 1:
-            print('Invalid number of runs: {}.'.format(args.runs))
-            sys.exit()
-
-        run_args = ['parallel', '--bar',
-                    '--max-procs={}'.format(get_sim_jobs(args))] + run_args + ['::::']
-        run_args.append(str(paths['SCRIPTS_FILE']))
-        run_args.append(':::')
-        run_args.extend([str(n) for n in range(args.runs)])
+        run_args = parallel_options + run_args + parallel_args
 
     print('Running command:\n{}'.format(' '.join(run_args)))
 
