@@ -20,6 +20,7 @@ tasks, namely:
     experimental work;
 -   `mcpat-templates`: corresponding McPAT templates for these OoO ARMv8 CPU
     configurations;
+-   `notebooks`: jupyter notebooks for analysing the results and generating plots;
 -   `util/`:
     -   `util/gen_data.py`: a script for generating an integer dataset following
         a random probabilty distribution;
