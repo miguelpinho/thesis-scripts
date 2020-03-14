@@ -18,9 +18,9 @@ tasks, namely:
     public and custom benchmarks;
 -   `o3-configs/`: set of O3CPU ARMv8 configurations used for my thesis
     experimental work;
--   `mcpat-templates`: corresponding McPAT templates for these OoO ARMv8 CPU
+-   `mcpat-templates/`: corresponding McPAT templates for these OoO ARMv8 CPU
     configurations;
--   `notebooks`: jupyter notebooks for analysing the results and generating plots;
+-   `notebooks/`: jupyter notebooks for analysing the results and generating plots;
 -   `util/`:
     -   `util/gen_data.py`: a script for generating an integer dataset following
         a random probabilty distribution;
