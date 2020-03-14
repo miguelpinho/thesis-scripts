@@ -162,7 +162,7 @@ class O3_ARM_v7a_3(DerivO3CPU):
     numPhysFloatRegs = 256
     numPhysVecRegs = 256
     numIQEntries = 120
-    numROBEntries = 192
+    numROBEntries = 128
 
     switched_out = False
     branchPred = O3_ARM_v7a_BP()
@@ -185,7 +185,7 @@ class O3_ARM_v7a_DCache(Cache):
     tag_latency = 2
     data_latency = 2
     response_latency = 1
-    mshrs = 24
+    mshrs = 20
     tgts_per_mshr = 16
     size = '64kB'
     assoc = 4
@@ -213,7 +213,7 @@ class O3_ARM_v7aL2(Cache):
     tag_latency = 9
     data_latency = 9
     response_latency = 5
-    mshrs = 24
+    mshrs = 46
     tgts_per_mshr = 16
     size = '256kB'
     assoc = 8
