@@ -259,9 +259,7 @@
       <component id="system.core0.dcache" name="dcache">
         <!-- We can use most of the system provided values, but we hardcode the
              output width to 16B, since NEON units are 128 bits wide. -->
-        <!-- TODO: Default L1 cache size is 64 KB, but we need a 32KB cache.
-             Hard code this value for now and rerun experiments later. -->
-        <param name="dcache_config" value="32768,config.system.cpu.dcache.tags.block_size,config.system.cpu.dcache.assoc,1,1,config.system.cpu.dcache.response_latency,16,0"/>
+        <param name="dcache_config" value="config.system.cpu.dcache.size,config.system.cpu.dcache.tags.block_size,config.system.cpu.dcache.assoc,1,1,config.system.cpu.dcache.response_latency,16,0"/>
         <param name="buffer_sizes" value="config.system.cpu.dcache.mshrs,config.system.cpu.dcache.mshrs,config.system.cpu.dcache.mshrs,config.system.cpu.dcache.mshrs"/>
         <!-- cache controller buffer sizes: miss_buffer_size(MSHR),fill_buffer_size,prefetch_buffer_size,wb_buffer_size-->
         <stat name="read_accesses" value="stats.system.cpu.dcache.ReadReq_accesses::total"/>
