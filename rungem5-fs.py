@@ -29,6 +29,12 @@ def get_arguments():
     subparsers.required = True
 
     # generic options
+    parser.add_argument(
+        '--dry-run',
+        action="store_true",
+        default=False,
+        help='''does not run the command, only prints it'''
+    )
     # env
     parser.add_argument(
         '--env-file',
@@ -506,9 +512,17 @@ def run_fs(args, paths, bin_gem5, args_gem5, config_script, args_config):
 
         run_args = parallel_options + run_args + parallel_args
 
-    print('Running command:\n{}'.format(' '.join(run_args)))
+    print('')
+    if args.dry_run:
+        print('Would run command:\n{}'.format(' '.join(run_args)))
+    else:
+        print('Running command:\n{}'.format(' '.join(run_args)))
 
-    subprocess.run(run_args)
+        subprocess.run(run_args)
+
+    print('')
+    print('Exiting')
+    print('')
 
 
 def main():
