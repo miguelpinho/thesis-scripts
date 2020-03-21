@@ -3,6 +3,7 @@
 DIR="${BASH_SOURCE%/*}"
 if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
 
+find $1 -name 'config.json' | parallel --bar "$DIR/parse_config.py {} > {//}/config.csv"
 find $1 -name 'stats.txt' | parallel --bar "awk -f $DIR/clean_stats.awk {} > {//}/roi.txt"
 find $1 -name 'roi.txt' | parallel --bar "awk -f $DIR/time.awk {} > {//}/time.csv"
 find $1 -name 'roi.txt' | parallel --bar "awk -f $DIR/stat.awk -v stat='{2}' {1} | csvtool transpose - > {1//}/{2}.csv" :::: - ::: simd_fu_used simd_fu_extra simd_fu_issued simd_fu_width fp_simd_fu_used
