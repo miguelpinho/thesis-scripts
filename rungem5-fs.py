@@ -149,6 +149,13 @@ def get_arguments():
         default=None,
         help='''suffix for the output folder generated'''
     )
+    # simulation params
+    parser.add_argument(
+        '--width-block',
+        nargs='+',
+        default=[8],
+        help='''width block granularity'''
+    )
 
     # "info" action
     parser_info = subparsers.add_parser(
@@ -378,7 +385,7 @@ def get_gem5_args(args, paths):
 
         if args.action == 'benchmark' or args.action == 'scriptset':
             args_gem5.append(
-                '--outdir={}'.format(paths['OUT_PATH'] / r'{1.}_{2}'))
+                '--outdir={}'.format(paths['OUT_PATH'] / r'{1.}_{3}'))
         else:
             args_gem5.append('--outdir={}'.format(paths['OUT_PATH']))
 
@@ -440,9 +447,12 @@ def get_config_args(args, paths):
         args_config.append("--script={}".format(script))
     elif args.action == 'benchmark':
         args_config.append("--script={}/".format(paths['BENCH_DIR'].absolute()) + r'{1}')
+        # TODO: Also add width block in other modes (requires parallel in all).
+        args_config.append( "--width-block={}".format(r'{2}'))
     elif args.action == 'scriptset':
         args_config.append(
             "--script={}/".format(paths['SCRIPTS_DIR'].absolute()) + r'{1}')
+        args_config.append( "--width-block={}".format(r'{2}'))
 
     if args.action in ['restart', 'script', 'benchmark', 'scriptset']:
         if not args.fast_cpu:
@@ -502,9 +512,12 @@ def run_fs(args, paths, bin_gem5, args_gem5, config_script, args_config):
             if not bench_txt.is_file():
                 print('Invalid benchmark list file: {}.'.format(bench_txt))
                 sys.exit()
-            parallel_args = ['::::', str(bench_txt)]
+            parallel_args = ['::::', str(bench_txt), ':::']
+            parallel_args.extend(args.width_block)
         elif args.action == 'scriptset':
             parallel_args = ['::::', str(paths['SCRIPTS_FILE']), ':::']
+            parallel_args.extend([str(p) for p in args.width_block])
+            parallel_args.append(':::')
             if args.runs < 1:
                 print('Invalid number of runs: {}.'.format(args.runs))
                 sys.exit()
