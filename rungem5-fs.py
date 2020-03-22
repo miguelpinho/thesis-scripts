@@ -385,7 +385,7 @@ def get_gem5_args(args, paths):
 
         if args.action == 'benchmark' or args.action == 'scriptset':
             args_gem5.append(
-                '--outdir={}'.format(paths['OUT_PATH'] / r'{1.}_{3}'))
+                '--outdir={}'.format(paths['OUT_PATH'] / r'{1.}_block{2}_{3}'))
         else:
             args_gem5.append('--outdir={}'.format(paths['OUT_PATH']))
 
