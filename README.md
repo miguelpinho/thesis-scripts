@@ -4,8 +4,9 @@ This repository includes a set of scripts for automating my thesis experimental
 tasks, namely:
 
 -   running a modified full-system gem5 version;
--   parsing and ploting run metrics;
--   (TODO) performing a power/energy impact analysis using McPAT.
+-   parsing configs, traces and run metrics;
+-   performing a power/energy impact analysis using McPAT;
+-   analysing the results and plotting graphs (jupyter notebooks).
 
 ## Contents
 
@@ -18,18 +19,18 @@ tasks, namely:
     public and custom benchmarks;
 -   `o3-configs/`: set of O3CPU ARMv8 configurations used for my thesis
     experimental work;
--   `mcpat-templates`: corresponding McPAT templates for these OoO ARMv8 CPU
+-   `mcpat-templates/`: corresponding McPAT templates for these OoO ARMv8 CPU
     configurations;
--   `notebooks`: jupyter notebooks for analysing the results and generating plots;
+-   `notebooks/`: jupyter notebooks for analysing the results and generating plots;
 -   `util/`:
     -   `util/gen_data.py`: a script for generating an integer dataset following
-        a random probabilty distribution;
+        a random probability distribution;
     -   `util/analysis_width.py`: a script for analysing the bit-width
         distribution of an integer dataset.
     -   `util/disk/`: utility scripts for (un)mounting and "chrooting"
         full-system disk images;
     -   `util/analysis/`: collection of scripts for parsing gem5 output metrics
-        and plotting analysis graphs;
+        into csv files;
     -   `util/mcpat/`: scripts for using McPAT for power estimation
         -   `util/mcpat/GEM5toMcPAT.py`: versatile parser from gem5 stats to
             McPAT xml input. Originally developed by Daya Khudia
@@ -39,6 +40,12 @@ tasks, namely:
         -   `util/mcpat/print_energy.py`: script to calculate energy
             dissipation. By Andreas Brokalakis
             ([cMcPAT](https://github.com/H2020-COSSIM/cMcPAT)).
+-   `experimental_pipeline.svg`: overview of how these scripts connect in the
+    experimental pipeline;
+
+## Experimental Pipeline
+
+![Experimental Pipeline](experimental_pipeline.svg)
 
 ## Benchmark Scripts
 

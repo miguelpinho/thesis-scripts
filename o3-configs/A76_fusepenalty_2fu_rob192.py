@@ -58,7 +58,7 @@ class O3_ARM_v7a_FP(FUDesc):
                OpDesc(opClass='FloatMult', opLat=4),
                OpDesc(opClass='FloatMultAcc', opLat=5),
                OpDesc(opClass='FloatMisc', opLat=3) ]
-    count = 1
+    count = 2
     widthCap = 128
     floatp = True
 
@@ -84,7 +84,7 @@ class O3_ARM_v7a_AdvSimd(FUDesc):
                OpDesc(opClass='SimdFloatMult', opLat=4),
                OpDesc(opClass='SimdFloatMultAcc',opLat=6),
                OpDesc(opClass='SimdFloatSqrt', opLat=10) ]
-    count = 1
+    count = 2
     fuseCap = 3
     widthCap = 128
     simd = True
@@ -162,7 +162,7 @@ class O3_ARM_v7a_3(DerivO3CPU):
     numPhysFloatRegs = 256
     numPhysVecRegs = 256
     numIQEntries = 120
-    numROBEntries = 128
+    numROBEntries = 192
 
     switched_out = False
     branchPred = O3_ARM_v7a_BP()

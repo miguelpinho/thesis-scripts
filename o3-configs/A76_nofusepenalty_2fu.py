@@ -58,7 +58,7 @@ class O3_ARM_v7a_FP(FUDesc):
                OpDesc(opClass='FloatMult', opLat=4),
                OpDesc(opClass='FloatMultAcc', opLat=5),
                OpDesc(opClass='FloatMisc', opLat=3) ]
-    count = 1
+    count = 2
     widthCap = 128
     floatp = True
 
@@ -84,8 +84,8 @@ class O3_ARM_v7a_AdvSimd(FUDesc):
                OpDesc(opClass='SimdFloatMult', opLat=4),
                OpDesc(opClass='SimdFloatMultAcc',opLat=6),
                OpDesc(opClass='SimdFloatSqrt', opLat=10) ]
-    count = 1
-    fuseCap = 3
+    count = 2
+    fuseCap = 0
     widthCap = 128
     simd = True
 

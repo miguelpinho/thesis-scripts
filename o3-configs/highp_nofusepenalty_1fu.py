@@ -24,39 +24,36 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# Authors: ICS-FORTH, Polydoros Petrakis <ppetrak@ics.forth.gr>
+# Authors: Ron Dreslinski
 
-# Based on previous model for ARM Cortex A72 provided by Adria Armejach (BSC)
-# and information from the following links regarding Cortex-A76:
-# https://en.wikichip.org/wiki/arm_holdings/microarchitectures/cortex-a76
-# https://www.anandtech.com/show/12785/arm-cortex-a76-cpu
-#-unveiled-7nm-powerhouse/2
-# https://www.anandtech.com/show/12785/arm-cortex-a76-cpu
-#-unveiled-7nm-powerhouse/3
 
 from m5.objects import *
+
+# The high performance core FU Pool is based on Apple's A12 Vortex
+# public information on execution latency and throughput
+# https://www.anandtech.com/show/13392/the-iphone-xs-xs-max-review-unveiling-the-silicon-secrets/3
 
 # Simple ALU Instructions have a latency of 1
 class O3_ARM_v7a_Simple_Int(FUDesc):
     opList = [ OpDesc(opClass='IntAlu', opLat=1) ]
-    count = 3
+    count = 6
 
 # Complex ALU instructions have a variable latencies
 class O3_ARM_v7a_Complex_Int(FUDesc):
-    opList = [ OpDesc(opClass='IntMult', opLat=3, pipelined=True),
-               OpDesc(opClass='IntDiv', opLat=12, pipelined=False),
+    opList = [ OpDesc(opClass='IntMult', opLat=4, pipelined=True),
+               OpDesc(opClass='IntDiv', opLat=8, pipelined=False),
                OpDesc(opClass='IprAccess', opLat=3, pipelined=True) ]
     count = 2
 
-# Floating point
+# Floating point instructions
 class O3_ARM_v7a_FP(FUDesc):
-    opList = [ OpDesc(opClass='FloatAdd', opLat=5),
-               OpDesc(opClass='FloatCmp', opLat=5),
-               OpDesc(opClass='FloatCvt', opLat=5),
+    opList = [ OpDesc(opClass='FloatAdd', opLat=3),
+               OpDesc(opClass='FloatCmp', opLat=3),
+               OpDesc(opClass='FloatCvt', opLat=3),
                OpDesc(opClass='FloatDiv', opLat=9, pipelined=False),
                OpDesc(opClass='FloatSqrt', opLat=33, pipelined=False),
                OpDesc(opClass='FloatMult', opLat=4),
-               OpDesc(opClass='FloatMultAcc', opLat=5),
+               OpDesc(opClass='FloatMultAcc', opLat=4),
                OpDesc(opClass='FloatMisc', opLat=3) ]
     count = 1
     widthCap = 128
@@ -64,52 +61,48 @@ class O3_ARM_v7a_FP(FUDesc):
 
 # SIMD instructions
 class O3_ARM_v7a_AdvSimd(FUDesc):
-    opList = [ OpDesc(opClass='SimdAdd', opLat=5),
-               OpDesc(opClass='SimdAddAcc', opLat=5),
-               OpDesc(opClass='SimdAlu', opLat=5),
-               OpDesc(opClass='SimdCmp', opLat=5),
-               OpDesc(opClass='SimdCvt', opLat=4),
-               OpDesc(opClass='SimdMisc', opLat=4),
-               OpDesc(opClass='SimdMult',opLat=6),
-               OpDesc(opClass='SimdMultAcc',opLat=6),
-               OpDesc(opClass='SimdShift',opLat=4),
-               OpDesc(opClass='SimdShiftAcc', opLat=4),
+    opList = [ OpDesc(opClass='SimdAdd', opLat=3),
+               OpDesc(opClass='SimdAddAcc', opLat=3),
+               OpDesc(opClass='SimdAlu', opLat=3),
+               OpDesc(opClass='SimdCmp', opLat=3),
+               OpDesc(opClass='SimdCvt', opLat=3),
+               OpDesc(opClass='SimdMisc', opLat=3),
+               OpDesc(opClass='SimdMult',opLat=4),
+               OpDesc(opClass='SimdMultAcc',opLat=4),
+               OpDesc(opClass='SimdShift',opLat=3),
+               OpDesc(opClass='SimdShiftAcc', opLat=3),
                OpDesc(opClass='SimdSqrt', opLat=10),
-               OpDesc(opClass='SimdFloatAdd',opLat=6),
-               OpDesc(opClass='SimdFloatAlu',opLat=6),
+               OpDesc(opClass='SimdFloatAdd',opLat=4),
+               OpDesc(opClass='SimdFloatAlu',opLat=4),
                OpDesc(opClass='SimdFloatCmp', opLat=4),
                OpDesc(opClass='SimdFloatCvt', opLat=4),
                OpDesc(opClass='SimdFloatDiv', opLat=4),
                OpDesc(opClass='SimdFloatMisc', opLat=4),
-               OpDesc(opClass='SimdFloatMult', opLat=4),
-               OpDesc(opClass='SimdFloatMultAcc',opLat=6),
+               OpDesc(opClass='SimdFloatMult', opLat=5),
+               OpDesc(opClass='SimdFloatMultAcc',opLat=5),
                OpDesc(opClass='SimdFloatSqrt', opLat=10) ]
     count = 1
-    fuseCap = 3
+    fuseCap = 0
     widthCap = 128
     simd = True
 
-
 # Load/Store Units
 class O3_ARM_v7a_Load(FUDesc):
-    opList = [ OpDesc(opClass='MemRead'),
-               OpDesc(opClass='FloatMemRead') ]
+    opList = [ OpDesc(opClass='MemRead',opLat=2),
+               OpDesc(opClass='FloatMemRead',opLat=2) ]
     count = 2
     widthCap = 128
 
 class O3_ARM_v7a_Store(FUDesc):
-    opList = [ OpDesc(opClass='MemWrite'),
-               OpDesc(opClass='FloatMemWrite') ]
-    count = 1
+    opList = [ OpDesc(opClass='MemWrite',opLat=2),
+               OpDesc(opClass='FloatMemWrite',opLat=2) ]
+    count = 2
     widthCap = 128
 
 # Functional Units for this CPU
 class O3_ARM_v7a_FUP(FUPool):
-    FUList = [O3_ARM_v7a_Simple_Int(),
-              O3_ARM_v7a_Complex_Int(),
-              O3_ARM_v7a_Load(),
-              O3_ARM_v7a_Store(),
-              O3_ARM_v7a_FP(),
+    FUList = [O3_ARM_v7a_Simple_Int(), O3_ARM_v7a_Complex_Int(),
+              O3_ARM_v7a_Load(), O3_ARM_v7a_Store(), O3_ARM_v7a_FP(),
               O3_ARM_v7a_AdvSimd()]
 
 # Bi-Mode Branch Predictor
@@ -118,14 +111,17 @@ class O3_ARM_v7a_BP(BiModeBP):
     globalCtrBits = 2
     choicePredictorSize = 8192
     choiceCtrBits = 2
-    BTBEntries = 4096
-    BTBTagSize = 16
+    BTBEntries = 2048
+    BTBTagSize = 18
     RASSize = 16
     instShiftAmt = 2
 
+# Pipeline parameters based on the Wang2019 paper
+# https://dl.acm.org/citation.cfm?id=3322229&dl=ACM&coll=DL
+
 class O3_ARM_v7a_3(DerivO3CPU):
-    LQEntries = 68
-    SQEntries = 72
+    LQEntries = 32
+    SQEntries = 32
     LSQDepCheckShift = 0
     LFSTSize = 1024
     SSITSize = 1024
@@ -139,12 +135,12 @@ class O3_ARM_v7a_3(DerivO3CPU):
     iewToRenameDelay = 1
     commitToRenameDelay = 1
     commitToIEWDelay = 1
-    fetchWidth = 4
-    fetchBufferSize = 16
-    fetchToDecodeDelay = 1
-    decodeWidth = 4
-    decodeToRenameDelay = 1
-    renameWidth = 4
+    fetchWidth = 8
+    fetchBufferSize = 32
+    fetchToDecodeDelay = 3
+    decodeWidth = 8
+    decodeToRenameDelay = 2
+    renameWidth = 8
     renameToIEWDelay = 1
     issueToExecuteDelay = 1
     dispatchWidth = 8
@@ -161,21 +157,21 @@ class O3_ARM_v7a_3(DerivO3CPU):
     numPhysIntRegs = 256
     numPhysFloatRegs = 256
     numPhysVecRegs = 256
-    numIQEntries = 120
-    numROBEntries = 128
+    numIQEntries = 64
+    numROBEntries = 192
 
     switched_out = False
     branchPred = O3_ARM_v7a_BP()
 
 # Instruction Cache
 class O3_ARM_v7a_ICache(Cache):
-    tag_latency = 1
-    data_latency = 1
-    response_latency = 1
+    tag_latency = 2
+    data_latency = 2
+    response_latency = 2
     mshrs = 8
     tgts_per_mshr = 8
-    size = '64kB'
-    assoc = 4
+    size = '32kB'
+    assoc = 8
     is_read_only = True
     # Writeback clean lines as well
     writeback_clean = True
@@ -184,12 +180,12 @@ class O3_ARM_v7a_ICache(Cache):
 class O3_ARM_v7a_DCache(Cache):
     tag_latency = 2
     data_latency = 2
-    response_latency = 1
-    mshrs = 20
-    tgts_per_mshr = 16
-    size = '64kB'
-    assoc = 4
-    write_buffers = 24
+    response_latency = 2
+    mshrs = 8
+    tgts_per_mshr = 8
+    size = '32kB'
+    assoc = 8
+    write_buffers = 16
     # Consider the L2 a victim cache also for clean lines
     writeback_clean = True
 
@@ -210,16 +206,33 @@ class O3_ARM_v7aWalkCache(Cache):
 
 # L2 Cache
 class O3_ARM_v7aL2(Cache):
-    tag_latency = 9
-    data_latency = 9
-    response_latency = 5
-    mshrs = 46
-    tgts_per_mshr = 16
+    tag_latency = 15
+    data_latency = 15
+    response_latency = 15
+    mshrs = 16
+    tgts_per_mshr = 8
     size = '256kB'
-    assoc = 8
-    write_buffers = 24
+    assoc = 16
+    write_buffers = 8
     prefetch_on_access = True
-    clusivity = 'mostly_incl'
+    clusivity = 'mostly_excl'
+    # Simple stride prefetcher
+    prefetcher = StridePrefetcher(degree=8, latency = 1)
+    tags = BaseSetAssoc()
+    repl_policy = RandomRP()
+
+# L3 Cache
+class O3_ARM_v7aL3(Cache):
+    tag_latency = 20
+    data_latency = 20
+    response_latency = 20
+    mshrs = 20
+    tgts_per_mshr = 8
+    size = '8MB'
+    assoc = 8
+    write_buffers = 8
+    prefetch_on_access = True
+    clusivity = 'mostly_excl'
     # Simple stride prefetcher
     prefetcher = StridePrefetcher(degree=8, latency = 1)
     tags = BaseSetAssoc()

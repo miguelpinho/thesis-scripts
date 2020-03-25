@@ -58,34 +58,34 @@ class O3_ARM_v7a_FP(FUDesc):
                OpDesc(opClass='FloatMult', opLat=4),
                OpDesc(opClass='FloatMultAcc', opLat=5),
                OpDesc(opClass='FloatMisc', opLat=3) ]
-    count = 1
+    count = 2
     widthCap = 128
     floatp = True
 
 # SIMD instructions
 class O3_ARM_v7a_AdvSimd(FUDesc):
-    opList = [ OpDesc(opClass='SimdAdd', opLat=5),
-               OpDesc(opClass='SimdAddAcc', opLat=5),
-               OpDesc(opClass='SimdAlu', opLat=5),
-               OpDesc(opClass='SimdCmp', opLat=5),
-               OpDesc(opClass='SimdCvt', opLat=4),
-               OpDesc(opClass='SimdMisc', opLat=4),
-               OpDesc(opClass='SimdMult',opLat=6),
-               OpDesc(opClass='SimdMultAcc',opLat=6),
-               OpDesc(opClass='SimdShift',opLat=4),
-               OpDesc(opClass='SimdShiftAcc', opLat=4),
-               OpDesc(opClass='SimdSqrt', opLat=10),
-               OpDesc(opClass='SimdFloatAdd',opLat=6),
-               OpDesc(opClass='SimdFloatAlu',opLat=6),
-               OpDesc(opClass='SimdFloatCmp', opLat=4),
-               OpDesc(opClass='SimdFloatCvt', opLat=4),
-               OpDesc(opClass='SimdFloatDiv', opLat=4),
-               OpDesc(opClass='SimdFloatMisc', opLat=4),
-               OpDesc(opClass='SimdFloatMult', opLat=4),
-               OpDesc(opClass='SimdFloatMultAcc',opLat=6),
-               OpDesc(opClass='SimdFloatSqrt', opLat=10) ]
-    count = 1
-    fuseCap = 3
+    opList = [ OpDesc(opClass='SimdAdd', opLat=4),
+               OpDesc(opClass='SimdAddAcc', opLat=4),
+               OpDesc(opClass='SimdAlu', opLat=4),
+               OpDesc(opClass='SimdCmp', opLat=4),
+               OpDesc(opClass='SimdCvt', opLat=3),
+               OpDesc(opClass='SimdMisc', opLat=3),
+               OpDesc(opClass='SimdMult',opLat=5),
+               OpDesc(opClass='SimdMultAcc',opLat=5),
+               OpDesc(opClass='SimdShift',opLat=3),
+               OpDesc(opClass='SimdShiftAcc', opLat=3),
+               OpDesc(opClass='SimdSqrt', opLat=9),
+               OpDesc(opClass='SimdFloatAdd',opLat=5),
+               OpDesc(opClass='SimdFloatAlu',opLat=5),
+               OpDesc(opClass='SimdFloatCmp', opLat=3),
+               OpDesc(opClass='SimdFloatCvt', opLat=3),
+               OpDesc(opClass='SimdFloatDiv', opLat=3),
+               OpDesc(opClass='SimdFloatMisc', opLat=3),
+               OpDesc(opClass='SimdFloatMult', opLat=3),
+               OpDesc(opClass='SimdFloatMultAcc',opLat=5),
+               OpDesc(opClass='SimdFloatSqrt', opLat=9) ]
+    count = 2
+    fuseCap = 0
     widthCap = 128
     simd = True
 
@@ -162,7 +162,7 @@ class O3_ARM_v7a_3(DerivO3CPU):
     numPhysFloatRegs = 256
     numPhysVecRegs = 256
     numIQEntries = 120
-    numROBEntries = 128
+    numROBEntries = 192
 
     switched_out = False
     branchPred = O3_ARM_v7a_BP()
