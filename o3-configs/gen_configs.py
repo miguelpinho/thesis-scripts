@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-import argparse
-import random
+import shutil
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
 
@@ -50,11 +49,9 @@ for cpu in cpus:
                 with open(str(path / 'O3_ARM_v7a.py'), 'w') as f:
                     f.write(parsed)
 
-                # Create symlink to __init__.py.
+                # Copy __init__.py.
                 init = path / '__init__.py'
-                if init.is_symlink():
-                    init.unlink()
-                init.symlink_to(init_template.resolve())
+                shutil.copy(init_template, init)
 
                 # Add path to list.
                 folder_list.append(folder_name.replace('/', '.'))
