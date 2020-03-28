@@ -156,6 +156,11 @@ def get_arguments():
         default=[8],
         help='''width block granularity'''
     )
+    parser.add_argument(
+        '--custom-model',
+        default=None,
+        help='''custom cpu models folder'''
+    )
 
     # "info" action
     parser_info = subparsers.add_parser(
@@ -430,6 +435,10 @@ def get_config_args(args, paths):
     else:
         print("Unsupported architecture: '{}'.".format(arch))
         sys.exit()
+
+    # custom cpu models
+    if args.custom_model is not None:
+        args_config.append('--cpu-path={}'.format(args.custom_model))
 
     # caches
     if not args.no_caches:
