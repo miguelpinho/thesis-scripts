@@ -455,7 +455,7 @@ def get_config_args(args, paths):
     if args.custom_model is not None:
         args_config.append('--cpu-path={}'.format(args.custom_model))
     elif args.custom_model_file is not None:
-        if args.action in ['benchmark', 'scripset']:
+        if args.action in ['benchmark', 'scriptset']:
             # TODO: Add custom model list in other modes (requires parallel in al).
             args_config.append('--cpu-path={}'.format(r'{4}'))
 
