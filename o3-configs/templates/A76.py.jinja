@@ -125,8 +125,8 @@ class O3_ARM_v7a_BP(BiModeBP):
     instShiftAmt = 2
 
 class O3_ARM_v7a_3(DerivO3CPU):
-    LQEntries = 68
-    SQEntries = 72
+    LQEntries = {{ (68 * extra.queues)|int if extra.queues is defined else 68 }}
+    SQEntries = {{ (72 * extra.queues)|int if extra.queues is defined else 72 }}
     LSQDepCheckShift = 0
     LFSTSize = 1024
     SSITSize = 1024
@@ -148,22 +148,22 @@ class O3_ARM_v7a_3(DerivO3CPU):
     renameWidth = 4
     renameToIEWDelay = 1
     issueToExecuteDelay = 1
-    dispatchWidth = 8
-    issueWidth = 8
-    wbWidth = 8
+    dispatchWidth = {{ (8 * extra.dispatch)|int if extra.dispatch is defined else 8 }}
+    issueWidth = {{ (8 * extra.dispatch)|int if extra.dispatch is defined else 8 }}
+    wbWidth = {{ (8 * extra.dispatch)|int if extra.dispatch is defined else 8 }}
     fuPool = O3_ARM_v7a_FUP()
     iewToCommitDelay = 1
     renameToROBDelay = 1
-    commitWidth = 8
-    squashWidth = 8
+    commitWidth = {{ (8 * extra.dispatch)|int if extra.dispatch is defined else 8 }}
+    squashWidth = {{ (8 * extra.dispatch)|int if extra.dispatch is defined else 8 }}
     trapLatency = 13
     backComSize = 5
     forwardComSize = 5
-    numPhysIntRegs = 256
-    numPhysFloatRegs = 256
-    numPhysVecRegs = 256
-    numIQEntries = 120
-    numROBEntries = 128
+    numPhysIntRegs = {{ (256 * extra.regfile)|int if extra.regfile is defined else 256 }}
+    numPhysFloatRegs = {{ (256 * extra.regfile)|int if extra.regfile is defined else 256 }}
+    numPhysVecRegs = {{ (256 * extra.regfile)|int if extra.regfile is defined else 256 }}
+    numIQEntries = {{ (120 * extra.regfile)|int if extra.regfile is defined else 120 }}
+    numROBEntries = {{ (128 * extra.regfile)|int if extra.regfile is defined else 128 }}
 
     switched_out = False
     branchPred = O3_ARM_v7a_BP()
