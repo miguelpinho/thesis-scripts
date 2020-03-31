@@ -163,7 +163,7 @@ def main():
                 level = kernel[1]
 
                 for idx, data_file in enumerate(data):
-                    bench = '{}_{}_{}_{}.sh'.format(blas, tag, d, idx)
+                    bench = '{}_{}_{}_{}.rcS'.format(blas, tag, d, idx)
                     path = outdir / bench
                     benchmarks[level].append(bench)
 
@@ -176,7 +176,7 @@ def main():
                     print_script(path, prg, prg_args)
 
         for level, b in benchmarks.items():
-            bench_file = outdir / '{}_level{}.txt'.format(tag, level)
+            bench_file = outdir / 'blas_level{1}_{0}.txt'.format(tag, level)
             with open(bench_file, 'w') as outfile:
                 outfile.write('\n'.join(b))
 
@@ -184,8 +184,8 @@ def main():
     for tag, img_kernels in image_kernels.items():
         img_benchmarks = []
         for kernel, iterations in img_kernels.items():
-            for img in data_img:
-                bench = '{}_{}_{}.sh'.format(kernel, tag, img.split(sep='.')[0])
+            for img in data_img[tag]:
+                bench = '{}_{}_{}.rcS'.format(kernel, tag, img.split(sep='.')[0])
                 path = outdir / bench
                 img_benchmarks.append(bench)
 
