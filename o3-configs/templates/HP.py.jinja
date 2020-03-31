@@ -159,8 +159,8 @@ class O3_ARM_v7a_3(DerivO3CPU):
     numPhysIntRegs = {{ (384 * extra.regfile)|int if extra.regfile is defined else 384 }}
     numPhysFloatRegs = {{ (384 * extra.regfile)|int if extra.regfile is defined else 384 }}
     numPhysVecRegs = {{ (384 * extra.regfile)|int if extra.regfile is defined else 384 }}
-    numIQEntries = {{ (180 * extra.regfile)|int if extra.regfile is defined else 180 }}
-    numROBEntries = {{ (192 * extra.regfile)|int if extra.regfile is defined else 192 }}
+    numIQEntries = {{ (180 * extra.queues)|int if extra.queues is defined else 180 }}
+    numROBEntries = {{ (192 * extra.queues)|int if extra.queues is defined else 192 }}
 
     switched_out = False
     branchPred = O3_ARM_v7a_BP()
