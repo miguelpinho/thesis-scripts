@@ -1,7 +1,0 @@
-integerNN.rcS
-streamvbyte.rcS
-libpopcnt.rcS
-minimap2.rcS
-simdjson.rcS
-utf8_lemire.rcS
-utf8_range.rcS

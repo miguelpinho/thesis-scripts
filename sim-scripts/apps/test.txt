@@ -1,2 +1,0 @@
-pqcrypto-SIDH.rcS
-libjpeg-turbo.rcS
