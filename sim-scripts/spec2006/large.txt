@@ -1,2 +1,2 @@
-libquantum.sh
-hmmer.sh
+libquantum.rcS
+hmmer.rcS

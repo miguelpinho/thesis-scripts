@@ -1,2 +1,2 @@
-./apps/integerNN.sh
-./apps/streamvbyte.sh
+./apps/integerNN.rcS
+./apps/streamvbyte.rcS

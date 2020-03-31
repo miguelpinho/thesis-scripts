@@ -1,2 +1,2 @@
-integerNN.sh
-streamvbyte.sh
+integerNN.rcS
+streamvbyte.rcS

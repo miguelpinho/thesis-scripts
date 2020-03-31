@@ -465,7 +465,7 @@ def get_config_args(args, paths):
 
     # action specific
     if args.action == 'checkpoint':
-        script = Path.cwd() / "sim-scripts" / "checkpoint.sh"
+        script = Path.cwd() / "sim-scripts" / "checkpoint.rcS"
         args_config.append("--script={}".format(script))
     elif args.action == 'script':
         script = Path(args.script)

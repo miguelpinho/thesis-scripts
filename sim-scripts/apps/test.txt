@@ -1,2 +1,2 @@
-pqcrypto-SIDH.sh
-libjpeg-turbo.sh
+pqcrypto-SIDH.rcS
+libjpeg-turbo.rcS
