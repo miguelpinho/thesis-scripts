@@ -81,15 +81,15 @@ data_dist = {
 # image kernels
 image_kernels = {
     'tiny': {
-        'conv':6,
-        'img_hist':9,
-        'img_integral':18,
-        'img_erode':45,
-        'img_canny':3,
+        'conv':12,
+        'img_hist':20,
+        'img_integral':40,
+        'img_erode':100,
+        'img_canny':6,
         'img_cartoon':6,
-        'img_yuv444':90,
-        'img_median':30,
-        'img_scale':3
+        'img_yuv444':180,
+        'img_median':50,
+        'img_scale':6
     },
     'small': {
         'conv':10,

@@ -6,5 +6,5 @@ cd $KERNEL_DIR
 pwd                       
 ls                        
                           
-./build/img_yuv444 ./data/image4_50per.ppm 90                     
+./build/img_yuv444 ./data/image4_50per.ppm 180                     
 m5 exit                     
