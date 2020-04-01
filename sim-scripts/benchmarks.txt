@@ -1,4 +1,3 @@
-./splash2x/fft_simsmall_1.rcS
 ./thesis-apps/integerNN_1.rcS
 ./thesis-apps/streamvbyte_1.rcS
 ./thesis-kernels/img_hist_tiny_image1_50per.rcS
