@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-sudo chroot ./mnt /usr/bin/env -i \
+MOUNT="./mnt"
+
+sudo chroot $MOUNT /usr/bin/env -i \
     LOGNAME=root \
     USERNAME=root \
     HOME=/root \
