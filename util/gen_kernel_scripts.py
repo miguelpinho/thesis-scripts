@@ -41,14 +41,16 @@ algebra_kernels = [
 
 # algebra workload sizes
 workload_sizes = {
-    # 'tiny': ['1098304', '1024 1024', '256 256 256'],
-    # 'small': ['4194304', '2048 2048', '512 512 512'],
-    'normal': {
+    'tiny': {
+        1:{'iter':'3000', 'shape':['4096']},
+        2:{'iter':'150', 'shape':['1024 1024', '512 2048', '2048 512', '256 4096', '4096 256']},
+        3:{'iter':'5'  , 'shape':['524 524 524', '524 1048 256', '524 256 1048', '1048 256 524', '1048 524 256']}
+    },
+    'small': {
         1:{'iter':'400', 'shape':['65536']},
         2:{'iter':'200', 'shape':['2048 1024', '1024 2048', '4096 512', '512 4096', '256 8192']},
         3:{'iter':'5'  , 'shape':['1048 524 524', '524 1048 524', '524 524 1048', '1048 256 1048', '1048 1048 256']}
-    },
-    # 'large': ['67108864', '8192 8192', '2048 2048 2048']
+    }
 }
 
 # integer data distributions
@@ -78,25 +80,47 @@ data_dist = {
 
 # image kernels
 image_kernels = {
-    "conv":10,
-    "img_hist":15,
-    "img_integral":30,
-    "img_erode":75,
-    "img_canny":5,
-    "img_cartoon":10,
-    "img_yuv444":150,
-    "img_median":50,
-    "img_scale":5
+    'tiny': {
+        'conv':12,
+        'img_hist':20,
+        'img_integral':40,
+        'img_erode':100,
+        'img_canny':6,
+        'img_cartoon':6,
+        'img_yuv444':180,
+        'img_median':50,
+        'img_scale':6
+    },
+    'small': {
+        'conv':10,
+        'img_hist':15,
+        'img_integral':30,
+        'img_erode':75,
+        'img_canny':5,
+        'img_cartoon':10,
+        'img_yuv444':150,
+        'img_median':50,
+        'img_scale':5
+    }
 }
 
 # ppm image files
-data_img = [
-    "image1.ppm",
-    "image2.ppm",
-    "image3.ppm",
-    "image4.ppm",
-    "image5.ppm"
-]
+data_img = {
+    'tiny': [
+        'image1_50per.ppm',
+        'image2_50per.ppm',
+        'image3_50per.ppm',
+        'image4_50per.ppm',
+        'image5_50per.ppm'
+    ],
+    'small': [
+        'image1.ppm',
+        'image2.ppm',
+        'image3.ppm',
+        'image4.ppm',
+        'image5.ppm'
+    ]
+}
 
 
 def get_args():
@@ -139,7 +163,7 @@ def main():
                 level = kernel[1]
 
                 for idx, data_file in enumerate(data):
-                    bench = '{}_{}_{}_{}.sh'.format(blas, tag, d, idx)
+                    bench = '{}_{}_{}_{}.rcS'.format(blas, tag, d, idx)
                     path = outdir / bench
                     benchmarks[level].append(bench)
 
@@ -152,26 +176,27 @@ def main():
                     print_script(path, prg, prg_args)
 
         for level, b in benchmarks.items():
-            bench_file = outdir / '{}_level{}.txt'.format(tag, level)
+            bench_file = outdir / 'blas_level{1}_{0}.txt'.format(tag, level)
             with open(bench_file, 'w') as outfile:
                 outfile.write('\n'.join(b))
 
     # generate image scripts
-    img_benchmarks = []
-    for kernel, iterations in image_kernels.items():
-        for img in data_img:
-            bench = '{}_{}.sh'.format(kernel, img.split(sep='.')[0])
-            path = outdir / bench
-            img_benchmarks.append(bench)
+    for tag, img_kernels in image_kernels.items():
+        img_benchmarks = []
+        for kernel, iterations in img_kernels.items():
+            for img in data_img[tag]:
+                bench = '{}_{}_{}.rcS'.format(kernel, tag, img.split(sep='.')[0])
+                path = outdir / bench
+                img_benchmarks.append(bench)
 
-            prg = './build/{}'.format(kernel)
-            prg_args = ['./data/{}'.format(img), str(iterations)]
+                prg = './build/{}'.format(kernel)
+                prg_args = ['./data/{}'.format(img), str(iterations)]
 
-            print_script(path, prg, prg_args)
-    img_benchmarks.sort()
-    img_file = outdir / 'img.txt'
-    with open(img_file, 'w') as outfile:
-        outfile.write('\n'.join(img_benchmarks))
+                print_script(path, prg, prg_args)
+        img_benchmarks.sort()
+        img_file = outdir / 'img_{}.txt'.format(tag)
+        with open(img_file, 'w') as outfile:
+            outfile.write('\n'.join(img_benchmarks))
 
 
 if __name__ == "__main__":

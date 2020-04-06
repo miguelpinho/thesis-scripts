@@ -1,2 +1,0 @@
-pqcrypto-SIDH.sh
-libjpeg-turbo.sh

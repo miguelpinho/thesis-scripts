@@ -1,7 +1,0 @@
-img_canny_test.sh
-img_cartoon_test.sh
-img_yuv444_test.sh
-img_erode_test.sh
-img_hist_test.sh
-img_integral_test.sh
-conv_test.sh

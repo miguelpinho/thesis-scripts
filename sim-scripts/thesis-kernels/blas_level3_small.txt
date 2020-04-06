@@ -1,0 +1,15 @@
+gemm_small_8bit_0.rcS
+gemm_small_8bit_1.rcS
+gemm_small_8bit_2.rcS
+gemm_small_8bit_3.rcS
+gemm_small_8bit_4.rcS
+gemm_small_12bit_0.rcS
+gemm_small_12bit_1.rcS
+gemm_small_12bit_2.rcS
+gemm_small_12bit_3.rcS
+gemm_small_12bit_4.rcS
+gemm_small_16bit_0.rcS
+gemm_small_16bit_1.rcS
+gemm_small_16bit_2.rcS
+gemm_small_16bit_3.rcS
+gemm_small_16bit_4.rcS
