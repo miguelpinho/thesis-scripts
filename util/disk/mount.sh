@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
-sudo mount -o loop,rw,offset=1048576 ubuntu-14.04.img ./mnt/
+DISK="ubuntu-14.04.img"
+MOUNT="./mnt"
+OFFSET=1048576
 
-sudo mount -o bind /dev ./mnt/dev
-sudo mount -o bind /sys ./mnt/sys
-sudo mount -o bind /proc ./mnt/proc
+sudo mount -o loop,rw,offset=$OFFSET $DISK $MOUNT
+
+sudo mount -o bind /dev $MOUNT/dev
+sudo mount -o bind /sys $MOUNT/sys
+sudo mount -o bind /proc $MOUNT/proc

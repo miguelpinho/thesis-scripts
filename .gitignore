@@ -1,6 +1,8 @@
 .env
 *.csv
 *.pdf
+o3-configs/models/*
+!o3-configs/models/__init__.py
 
 # vscode
 .vscode/*

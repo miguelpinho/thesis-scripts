@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-sudo umount ./mnt/dev
-sudo umount ./mnt/sys
-sudo umount ./mnt/proc
+MOUNT="./mnt"
 
-sudo umount ./mnt
+sudo umount $MOUNT/dev
+sudo umount $MOUNT/sys
+sudo umount $MOUNT/proc
+
+sudo umount $MOUNT

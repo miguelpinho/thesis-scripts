@@ -156,6 +156,16 @@ def get_arguments():
         default=[8],
         help='''width block granularity'''
     )
+    parser.add_argument(
+        '--custom-model',
+        default=None,
+        help='''custom cpu model folder'''
+    )
+    parser.add_argument(
+        '--custom-model-file',
+        default=None,
+        help='''file with custom cpu model folders'''
+    )
 
     # "info" action
     parser_info = subparsers.add_parser(
@@ -383,11 +393,21 @@ def get_gem5_args(args, paths):
         else:
             args_gem5.extend(['--redirect-stdout', '--redirect-stderr'])
 
-        if args.action == 'benchmark' or args.action == 'scriptset':
-            args_gem5.append(
-                '--outdir={}'.format(paths['OUT_PATH'] / r'{1.}_block{2}_{3}'))
+        if args.action in ['benchmark', 'scriptset']:
+            if args.custom_model is not None:
+                args_gem5.append(
+                    '--outdir={}'.format(paths['OUT_PATH'] / args.custom_model / r'{1.}_block{2}_{3}'))
+            elif args.custom_model_file is not None:
+                args_gem5.append(
+                    '--outdir={}'.format(paths['OUT_PATH'] / r'{4}' / r'{1.}_block{2}_{3}'))
+            else:
+                args_gem5.append(
+                    '--outdir={}'.format(paths['OUT_PATH'] / r'{1.}_block{2}_{3}'))
         else:
-            args_gem5.append('--outdir={}'.format(paths['OUT_PATH']))
+            if args.custom_model is not None:
+                args_gem5.append('--outdir={}'.format(paths['OUT_PATH']))
+            else:
+                args_gem5.append('--outdir={}'.format(paths['OUT_PATH'] / args.custom_model))
 
         if not args.wildcard_gem5 is None:
             wildcards = args.wildcard_gem5.split()
@@ -431,13 +451,21 @@ def get_config_args(args, paths):
         print("Unsupported architecture: '{}'.".format(arch))
         sys.exit()
 
+    # custom cpu models
+    if args.custom_model is not None:
+        args_config.append('--cpu-path={}'.format(args.custom_model))
+    elif args.custom_model_file is not None:
+        if args.action in ['benchmark', 'scriptset']:
+            # TODO: Add custom model list in other modes (requires parallel in al).
+            args_config.append('--cpu-path={}'.format(r'{4}'))
+
     # caches
     if not args.no_caches:
         args_config.extend(['--caches', '--l2cache'])
 
     # action specific
     if args.action == 'checkpoint':
-        script = Path.cwd() / "sim-scripts" / "checkpoint.sh"
+        script = Path.cwd() / "sim-scripts" / "checkpoint.rcS"
         args_config.append("--script={}".format(script))
     elif args.action == 'script':
         script = Path(args.script)
@@ -447,7 +475,7 @@ def get_config_args(args, paths):
         args_config.append("--script={}".format(script))
     elif args.action == 'benchmark':
         args_config.append("--script={}/".format(paths['BENCH_DIR'].absolute()) + r'{1}')
-        # TODO: Also add width block in other modes (requires parallel in all).
+        # TODO: Add width block in other modes (requires parallel in all).
         args_config.append( "--width-block={}".format(r'{2}'))
     elif args.action == 'scriptset':
         args_config.append(
@@ -522,6 +550,13 @@ def run_fs(args, paths, bin_gem5, args_gem5, config_script, args_config):
                 print('Invalid number of runs: {}.'.format(args.runs))
                 sys.exit()
             parallel_args.extend([str(n) for n in range(args.runs)])
+
+        if args.custom_model_file is not None:
+            if not Path(args.custom_model_file).is_file():
+                print('Invalid cpu models file: {}.'.format(args.custom_model_file))
+                sys.exit()
+
+            parallel_args.extend(['::::', args.custom_model_file])
 
         run_args = parallel_options + run_args + parallel_args
 

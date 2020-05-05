@@ -1,2 +1,0 @@
-./apps/integerNN.sh
-./apps/streamvbyte.sh
