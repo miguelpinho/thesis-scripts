@@ -49,14 +49,14 @@ tasks, namely:
 
 ## Benchmark Scripts
 
--   Splash-2 benchmarks (most of them);
--   Some PARSEC-3.0 benchmarks;
--   At least two SPEC2006 (probably several more);
--   Custom thesis kernels and mini-apps.
+-   Most Splash-2 benchmarks;
+-   Several PARSEC-3.0 benchmarks;
+-   Two SPEC2006 benchmarks (`libquantum` and `hmmer`);
+-   Custom set of thesis kernels and mini-apps.
 
 ## TODO
 
 -   [ ] Refactor get-stats script to a data pipeline/build system;
 -   [ ] Handle dependencies better: requirements.txt, env...;
 -   [ ] Update python2 scripts to python3.
--   [ ] Add more benchmark sizes (`tiny`, `small`, `large`)
+-   [ ] Add more thesis kernels sizes (`normal`, `large`)
